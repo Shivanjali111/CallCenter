@@ -81,7 +81,7 @@ public class AddCustomer extends javax.swing.JDialog {
             }
         });
         getContentPane().add(submitB);
-        submitB.setBounds(270, 480, 80, 30);
+        submitB.setBounds(260, 430, 80, 30);
 
         resetB.setText("Reset");
         resetB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -91,7 +91,7 @@ public class AddCustomer extends javax.swing.JDialog {
             }
         });
         getContentPane().add(resetB);
-        resetB.setBounds(370, 480, 80, 30);
+        resetB.setBounds(360, 430, 80, 30);
 
         jLabel3.setText("Service Details");
         jLabel3.setFont(new java.awt.Font("Times New Roman", 3, 16)); // NOI18N
@@ -159,12 +159,12 @@ public class AddCustomer extends javax.swing.JDialog {
         mobileMsgL.setForeground(new java.awt.Color(255, 0, 0));
         mobileMsgL.setText("Enter a valid number");
         getContentPane().add(mobileMsgL);
-        mobileMsgL.setBounds(110, 150, 140, 23);
+        mobileMsgL.setBounds(110, 150, 140, 14);
 
         emailMsgL.setForeground(new java.awt.Color(255, 0, 0));
         emailMsgL.setText("Please enter a valid email ID");
         getContentPane().add(emailMsgL);
-        emailMsgL.setBounds(390, 150, 210, 23);
+        emailMsgL.setBounds(390, 150, 210, 14);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel6.setText("First Name");
