@@ -1884,7 +1884,7 @@ public class Home extends javax.swing.JFrame {
        if(dialog.added){
            String query="insert into customer values("+dialog.customerIdT.getText()+",'"+dialog.customerFN.getText()+"','"+
                    dialog.customerLNT.getText()+"','"+dialog.customerEmailT.getText()+"',"+dialog.customerMobT.getText()
-                   +",'"+dialog.prodServiceT.getText()+"','Yes','"+dialog.warrantyD.getDateStringOrEmptyString()+"')";
+                   +",'"+dialog.serviceC.getSelectedItem()+"','Yes','"+dialog.dateOfPurchaseD.getDateStringOrEmptyString()+"')";
            // Connection connection=gd.getConnection();
             
             try {

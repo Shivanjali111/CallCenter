@@ -100,7 +100,7 @@ public class AddSettings extends javax.swing.JDialog {
         msgL.setForeground(new java.awt.Color(255, 0, 0));
         msgL.setText("Please enter all the feilds");
         getContentPane().add(msgL);
-        msgL.setBounds(90, 180, 150, 14);
+        msgL.setBounds(90, 180, 150, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

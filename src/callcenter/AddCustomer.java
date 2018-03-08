@@ -41,15 +41,21 @@ public class AddCustomer extends javax.swing.JDialog {
         emailMsgL = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         customerFN = new javax.swing.JTextField();
-        prodServiceT = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        warrantyD = new com.github.lgooddatepicker.components.DatePicker();
+        dateOfPurchaseD = new com.github.lgooddatepicker.components.DatePicker();
+        serviceC = new javax.swing.JComboBox<>();
+        productC = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        servicenoT = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        productnoT = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(685, 500));
+        setTitle("Customer Details");
+        setMinimumSize(new java.awt.Dimension(780, 537));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(685, 500));
         setResizable(false);
         getContentPane().setLayout(null);
 
@@ -58,7 +64,7 @@ public class AddCustomer extends javax.swing.JDialog {
         getContentPane().add(jLabel4);
         jLabel4.setBounds(20, 250, 100, 30);
         getContentPane().add(customerIdT);
-        customerIdT.setBounds(110, 250, 150, 30);
+        customerIdT.setBounds(110, 250, 160, 30);
 
         jLabel21.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel21.setText("Last Name");
@@ -75,7 +81,7 @@ public class AddCustomer extends javax.swing.JDialog {
             }
         });
         getContentPane().add(submitB);
-        submitB.setBounds(220, 370, 80, 30);
+        submitB.setBounds(270, 480, 80, 30);
 
         resetB.setText("Reset");
         resetB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -85,7 +91,7 @@ public class AddCustomer extends javax.swing.JDialog {
             }
         });
         getContentPane().add(resetB);
-        resetB.setBounds(320, 370, 80, 30);
+        resetB.setBounds(370, 480, 80, 30);
 
         jLabel3.setText("Service Details");
         jLabel3.setFont(new java.awt.Font("Times New Roman", 3, 16)); // NOI18N
@@ -93,9 +99,9 @@ public class AddCustomer extends javax.swing.JDialog {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(20, 180, 150, 30);
 
+        jLabel1.setText("Personal Details");
         jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 16)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 51, 255));
-        jLabel1.setText("Personal Details");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(20, 10, 150, 30);
         getContentPane().add(jSeparator2);
@@ -153,12 +159,12 @@ public class AddCustomer extends javax.swing.JDialog {
         mobileMsgL.setForeground(new java.awt.Color(255, 0, 0));
         mobileMsgL.setText("Enter a valid number");
         getContentPane().add(mobileMsgL);
-        mobileMsgL.setBounds(110, 150, 140, 14);
+        mobileMsgL.setBounds(110, 150, 140, 23);
 
         emailMsgL.setForeground(new java.awt.Color(255, 0, 0));
         emailMsgL.setText("Please enter a valid email ID");
         getContentPane().add(emailMsgL);
-        emailMsgL.setBounds(390, 150, 210, 14);
+        emailMsgL.setBounds(390, 150, 210, 23);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel6.setText("First Name");
@@ -167,34 +173,60 @@ public class AddCustomer extends javax.swing.JDialog {
         getContentPane().add(customerFN);
         customerFN.setBounds(110, 60, 172, 30);
 
-        prodServiceT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                prodServiceTActionPerformed(evt);
-            }
-        });
-        getContentPane().add(prodServiceT);
-        prodServiceT.setBounds(420, 250, 220, 30);
-
-        jLabel7.setText("Warranty Date");
+        jLabel7.setText("Date of Purchase");
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(10, 310, 100, 30);
+        jLabel7.setBounds(310, 310, 140, 30);
 
-        jLabel9.setText("Service/Product");
+        jLabel9.setText("Service");
         jLabel9.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(300, 250, 100, 30);
-        getContentPane().add(warrantyD);
-        warrantyD.setBounds(110, 310, 170, 30);
+        jLabel9.setBounds(310, 250, 60, 30);
+        getContentPane().add(dateOfPurchaseD);
+        dateOfPurchaseD.setBounds(420, 310, 210, 30);
+
+        serviceC.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Select--", "reissue", "validity", "purchase" }));
+        serviceC.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        serviceC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serviceCActionPerformed(evt);
+            }
+        });
+        getContentPane().add(serviceC);
+        serviceC.setBounds(400, 250, 230, 30);
+
+        productC.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Select--", "Battery", "Display", "Camera", "Speaker" }));
+        productC.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        getContentPane().add(productC);
+        productC.setBounds(108, 310, 160, 30);
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        jLabel2.setText("Product");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(20, 310, 90, 19);
+
+        jLabel8.setText("Service No");
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(20, 360, 100, 30);
+        getContentPane().add(servicenoT);
+        servicenoT.setBounds(110, 360, 150, 30);
+
+        jLabel10.setText("Product No");
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(310, 360, 100, 30);
+        getContentPane().add(productnoT);
+        productnoT.setBounds(400, 360, 230, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBActionPerformed
         if(customerEmailT.getText()=="" || customerFN.getText()=="" || customerIdT.getText()=="" || customerMobT.getText()=="" ||
-                prodServiceT.getText()=="" || warrantyD.getText()=="" ){
-           JOptionPane.showMessageDialog(this,"Please enter all the feilds","Error",JOptionPane.ERROR_MESSAGE);
-           added=false;
+                serviceC.getSelectedIndex()==0 || dateOfPurchaseD.getText()=="" || productC.getSelectedIndex()==0|| 
+                productnoT.getText()=="" || servicenoT.getText()=="" ){
+           JOptionPane.showMessageDialog(this,"Please enter all the fields","Error",JOptionPane.ERROR_MESSAGE);
         }else{
             added=true;
             dispose();
@@ -204,9 +236,12 @@ public class AddCustomer extends javax.swing.JDialog {
     private void resetBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBActionPerformed
         customerIdT.setText("");
         customerLNT.setText("");
-
         customerMobT.setText("");
         customerEmailT.setText("");
+        serviceC.setSelectedIndex(0);
+        productC.setSelectedIndex(0);
+        servicenoT.setText("");
+        productnoT.setText("");
 
     }//GEN-LAST:event_resetBActionPerformed
 
@@ -255,9 +290,9 @@ public class AddCustomer extends javax.swing.JDialog {
         customerEmailT.setText(customerEmailT.getText().toLowerCase());
     }//GEN-LAST:event_customerEmailTKeyPressed
 
-    private void prodServiceTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prodServiceTActionPerformed
+    private void serviceCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceCActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_prodServiceTActionPerformed
+    }//GEN-LAST:event_serviceCActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,6 +320,7 @@ public class AddCustomer extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -307,8 +343,11 @@ public class AddCustomer extends javax.swing.JDialog {
     public javax.swing.JTextField customerIdT;
     public javax.swing.JTextField customerLNT;
     public javax.swing.JTextField customerMobT;
+    public com.github.lgooddatepicker.components.DatePicker dateOfPurchaseD;
     private javax.swing.JLabel emailMsgL;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
@@ -316,13 +355,16 @@ public class AddCustomer extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel mobileMsgL;
-    public javax.swing.JTextField prodServiceT;
+    public javax.swing.JComboBox<String> productC;
+    public javax.swing.JTextField productnoT;
     private javax.swing.JButton resetB;
+    public javax.swing.JComboBox<String> serviceC;
+    public javax.swing.JTextField servicenoT;
     private javax.swing.JButton submitB;
-    public com.github.lgooddatepicker.components.DatePicker warrantyD;
     // End of variables declaration//GEN-END:variables
 }
