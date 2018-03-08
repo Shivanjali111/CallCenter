@@ -194,6 +194,7 @@ public class AddCustomer extends javax.swing.JDialog {
         if(customerEmailT.getText()=="" || customerFN.getText()=="" || customerIdT.getText()=="" || customerMobT.getText()=="" ||
                 prodServiceT.getText()=="" || warrantyD.getText()=="" ){
            JOptionPane.showMessageDialog(this,"Please enter all the feilds","Error",JOptionPane.ERROR_MESSAGE);
+           added=false;
         }else{
             added=true;
             dispose();

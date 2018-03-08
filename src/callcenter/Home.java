@@ -8,12 +8,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class Home extends javax.swing.JFrame {
 
@@ -24,7 +28,8 @@ public class Home extends javax.swing.JFrame {
     int h,y,sy,dy,cy;    //Used in panel expanding and collapsing
     Timer reportsT;
     boolean show_reports_p=false;
-    GetData gd=new GetData(this);
+    GetData gd=new GetData();
+    Connection connection; 
     
     public Home() {
         initComponents();
@@ -34,7 +39,7 @@ public class Home extends javax.swing.JFrame {
         loggedL.setVisible(false);
         nameL.setVisible(false);
         msgL.setVisible(false);
-        employeeB.setVisible(false);
+        employeeInfoB.setVisible(false);
         accountP.setVisible(false);
         accountL.setVisible(false);
         reportsP.setVisible(false);
@@ -50,6 +55,8 @@ public class Home extends javax.swing.JFrame {
         employeeBaseP.setLayout(c);
         employeeBaseP.add(custEP,"cemp");
         employeeBaseP.add(dictEP,"demp");
+        
+        TableFormatting();
 
         reportsT=new Timer(100, new ActionListener() {
             @Override
@@ -58,6 +65,30 @@ public class Home extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void TableFormatting(){
+        
+        settingsT.getColumnModel().getColumn(0).setCellRenderer(new JLabelCellenderer());
+        empInfoT.getColumnModel().getColumn(0).setCellRenderer(new JLabelCellenderer());
+        dictT.getColumnModel().getColumn(0).setCellRenderer(new JLabelCellenderer());
+        customerT.getColumnModel().getColumn(0).setCellRenderer(new JLabelCellenderer());
+        
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+//        empInfoT.setDefaultRenderer(String.class, centerRenderer);
+        empInfoT.setDefaultRenderer(Integer.class, centerRenderer);
+        settingsT.setDefaultRenderer(Integer.class, centerRenderer);
+        dictT.setDefaultRenderer(Integer.class, centerRenderer);
+        customerT.setDefaultRenderer(Integer.class, centerRenderer);
+        
+        custET.setDefaultRenderer(Integer.class, centerRenderer);
+        dictET.setDefaultRenderer(Integer.class, centerRenderer);
+        
+//        for(int x=0;x<17;x++){
+//         empInfoT.getColumnModel().getColumn(x).setCellRenderer(centerRenderer);
+//        }
+    }
+  
 
     public void ImageChange() {
         Timer timer = new Timer(3000, new ActionListener() {
@@ -78,10 +109,10 @@ public class Home extends javax.swing.JFrame {
     }
     
     public void getSettings(){
-        gd.getDepartment();
-        gd.getCallType(0);
-        gd.getCallCategory(0);
-        gd.getError(0);
+        gd.getDepartment(settingsT);
+        gd.getCallType(0,settingsT);
+        gd.getCallCategory(0,settingsT);
+        gd.getError(0,settingsT);
     }
     
     private void ExpandReportsP(){
@@ -160,7 +191,7 @@ public class Home extends javax.swing.JFrame {
         homeB = new javax.swing.JButton();
         aboutUsB = new javax.swing.JButton();
         loginB = new javax.swing.JButton();
-        employeeB = new javax.swing.JButton();
+        employeeInfoB = new javax.swing.JButton();
         nameL = new javax.swing.JLabel();
         loggedL = new javax.swing.JLabel();
         accountL = new javax.swing.JLabel();
@@ -180,7 +211,8 @@ public class Home extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         empInfoT = new javax.swing.JTable();
-        jButton11 = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        updateEmpInfoB = new javax.swing.JButton();
         dictP = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         dictT = new javax.swing.JTable();
@@ -195,20 +227,23 @@ public class Home extends javax.swing.JFrame {
         wordResetB = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         wordIdT = new javax.swing.JTextField();
+        titleL = new javax.swing.JLabel();
+        updateDictB = new javax.swing.JButton();
         settingsP = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        addTypeB = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         settingsCB = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         settingsT = new javax.swing.JTable();
+        updateSettB = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
         customerP = new javax.swing.JPanel();
-        jButton14 = new javax.swing.JButton();
+        addCustomerB = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         customerT = new javax.swing.JTable();
         jButton15 = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
-        jButton16 = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
         menu2P = new javax.swing.JPanel();
         settingsL = new javax.swing.JLabel();
         reportsL = new javax.swing.JLabel();
@@ -228,9 +263,11 @@ public class Home extends javax.swing.JFrame {
         dictEP = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         dictET = new javax.swing.JTable();
+        jLabel11 = new javax.swing.JLabel();
         custEP = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         custET = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
 
         popupMenu1.setLabel("popupMenu1");
 
@@ -289,17 +326,17 @@ public class Home extends javax.swing.JFrame {
         menuBar.add(loginB);
         loginB.setBounds(200, 0, 130, 40);
 
-        employeeB.setBackground(new java.awt.Color(102, 102, 255));
-        employeeB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        employeeB.setForeground(new java.awt.Color(255, 255, 255));
-        employeeB.setText("Employee Info");
-        employeeB.addActionListener(new java.awt.event.ActionListener() {
+        employeeInfoB.setBackground(new java.awt.Color(102, 102, 255));
+        employeeInfoB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        employeeInfoB.setForeground(new java.awt.Color(255, 255, 255));
+        employeeInfoB.setText("Employee Info");
+        employeeInfoB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                employeeBActionPerformed(evt);
+                employeeInfoBActionPerformed(evt);
             }
         });
-        menuBar.add(employeeB);
-        employeeB.setBounds(200, 0, 130, 40);
+        menuBar.add(employeeInfoB);
+        employeeInfoB.setBounds(200, 0, 130, 40);
 
         nameL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         nameL.setForeground(new java.awt.Color(255, 255, 255));
@@ -429,11 +466,11 @@ public class Home extends javax.swing.JFrame {
             }
         });
         employeeInfoP.add(jButton13);
-        jButton13.setBounds(50, 50, 130, 30);
+        jButton13.setBounds(60, 100, 120, 30);
 
         jButton12.setText("Search");
         employeeInfoP.add(jButton12);
-        jButton12.setBounds(750, 50, 80, 30);
+        jButton12.setBounds(760, 100, 80, 30);
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -441,70 +478,70 @@ public class Home extends javax.swing.JFrame {
             }
         });
         employeeInfoP.add(jTextField2);
-        jTextField2.setBounds(850, 50, 200, 30);
+        jTextField2.setBounds(860, 100, 200, 30);
 
         empInfoT.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "UserID", "First Name", "Last Name", "DOB", "CompanyID", "Address", "City", "State", "Country", "Pin Code", "Email", "CompanyMailID", "Mobile", "DeskID", "DepartmentID", "Date of Join"
+                "", "UserID", "First Name", "Last Name", "DOB", "CompanyID", "Address", "City", "State", "Country", "Pin Code", "Email", "CompanyMailID", "Mobile", "DeskID", "DepartmentID", "Date of Join"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true
+                true, false, true, true, true, false, true, true, true, true, true, true, true, true, true, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -516,55 +553,58 @@ public class Home extends javax.swing.JFrame {
             }
         });
         empInfoT.setGridColor(new java.awt.Color(0, 0, 0));
-        empInfoT.setRowHeight(18);
+        empInfoT.setRowHeight(25);
         empInfoT.getTableHeader().setReorderingAllowed(false);
+        empInfoT.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                empInfoTMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(empInfoT);
         if (empInfoT.getColumnModel().getColumnCount() > 0) {
-            empInfoT.getColumnModel().getColumn(0).setResizable(false);
-            empInfoT.getColumnModel().getColumn(0).setPreferredWidth(100);
+            empInfoT.getColumnModel().getColumn(0).setMinWidth(38);
+            empInfoT.getColumnModel().getColumn(0).setPreferredWidth(38);
+            empInfoT.getColumnModel().getColumn(0).setMaxWidth(38);
             empInfoT.getColumnModel().getColumn(1).setResizable(false);
-            empInfoT.getColumnModel().getColumn(1).setPreferredWidth(150);
+            empInfoT.getColumnModel().getColumn(1).setPreferredWidth(80);
             empInfoT.getColumnModel().getColumn(2).setResizable(false);
             empInfoT.getColumnModel().getColumn(2).setPreferredWidth(150);
-            empInfoT.getColumnModel().getColumn(3).setPreferredWidth(120);
-            empInfoT.getColumnModel().getColumn(3).setHeaderValue("DOB");
-            empInfoT.getColumnModel().getColumn(4).setPreferredWidth(100);
-            empInfoT.getColumnModel().getColumn(4).setHeaderValue("CompanyID");
-            empInfoT.getColumnModel().getColumn(5).setResizable(false);
-            empInfoT.getColumnModel().getColumn(5).setPreferredWidth(250);
-            empInfoT.getColumnModel().getColumn(5).setHeaderValue("Address");
-            empInfoT.getColumnModel().getColumn(6).setPreferredWidth(120);
-            empInfoT.getColumnModel().getColumn(6).setHeaderValue("City");
+            empInfoT.getColumnModel().getColumn(3).setResizable(false);
+            empInfoT.getColumnModel().getColumn(3).setPreferredWidth(150);
+            empInfoT.getColumnModel().getColumn(4).setPreferredWidth(120);
+            empInfoT.getColumnModel().getColumn(5).setPreferredWidth(100);
+            empInfoT.getColumnModel().getColumn(6).setResizable(false);
+            empInfoT.getColumnModel().getColumn(6).setPreferredWidth(250);
             empInfoT.getColumnModel().getColumn(7).setPreferredWidth(120);
-            empInfoT.getColumnModel().getColumn(7).setHeaderValue("State");
             empInfoT.getColumnModel().getColumn(8).setPreferredWidth(120);
-            empInfoT.getColumnModel().getColumn(8).setHeaderValue("Country");
-            empInfoT.getColumnModel().getColumn(9).setHeaderValue("Pin Code");
-            empInfoT.getColumnModel().getColumn(10).setPreferredWidth(250);
-            empInfoT.getColumnModel().getColumn(10).setHeaderValue("Email");
+            empInfoT.getColumnModel().getColumn(9).setPreferredWidth(120);
             empInfoT.getColumnModel().getColumn(11).setPreferredWidth(250);
-            empInfoT.getColumnModel().getColumn(11).setHeaderValue("CompanyMailID");
-            empInfoT.getColumnModel().getColumn(12).setResizable(false);
-            empInfoT.getColumnModel().getColumn(12).setPreferredWidth(150);
-            empInfoT.getColumnModel().getColumn(12).setHeaderValue("Mobile");
-            empInfoT.getColumnModel().getColumn(13).setPreferredWidth(100);
-            empInfoT.getColumnModel().getColumn(13).setHeaderValue("DeskID");
+            empInfoT.getColumnModel().getColumn(12).setPreferredWidth(250);
+            empInfoT.getColumnModel().getColumn(13).setResizable(false);
+            empInfoT.getColumnModel().getColumn(13).setPreferredWidth(150);
             empInfoT.getColumnModel().getColumn(14).setPreferredWidth(100);
-            empInfoT.getColumnModel().getColumn(14).setHeaderValue("DepartmentID");
-            empInfoT.getColumnModel().getColumn(15).setHeaderValue("Date of Join");
+            empInfoT.getColumnModel().getColumn(15).setPreferredWidth(100);
         }
 
         employeeInfoP.add(jScrollPane3);
-        jScrollPane3.setBounds(50, 100, 1020, 400);
+        jScrollPane3.setBounds(60, 150, 1020, 390);
 
-        jButton11.setText("Remove Employee");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        jLabel14.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel14.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel14.setText("                Employee Details");
+        jLabel14.setOpaque(true);
+        employeeInfoP.add(jLabel14);
+        jLabel14.setBounds(0, 30, 1200, 30);
+
+        updateEmpInfoB.setText("Update");
+        updateEmpInfoB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                updateEmpInfoBActionPerformed(evt);
             }
         });
-        employeeInfoP.add(jButton11);
-        jButton11.setBounds(40, 520, 150, 30);
+        employeeInfoP.add(updateEmpInfoB);
+        updateEmpInfoB.setBounds(200, 100, 80, 30);
 
         adminBaseP.add(employeeInfoP);
         employeeInfoP.setBounds(0, 0, 1200, 580);
@@ -575,42 +615,42 @@ public class Home extends javax.swing.JFrame {
         dictT.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         dictT.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Word", "Category", "Score", "Date Added", "Date Modified", "Modified By"
+                "", "ID", "Word", "Category", "Score", "Date Added", "Date Modified", "Modified By"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                true, false, true, true, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -621,24 +661,34 @@ public class Home extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        dictT.setRowHeight(25);
+        dictT.getTableHeader().setReorderingAllowed(false);
+        dictT.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dictTMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(dictT);
         if (dictT.getColumnModel().getColumnCount() > 0) {
-            dictT.getColumnModel().getColumn(0).setResizable(false);
+            dictT.getColumnModel().getColumn(0).setMinWidth(38);
+            dictT.getColumnModel().getColumn(0).setPreferredWidth(38);
+            dictT.getColumnModel().getColumn(0).setMaxWidth(38);
             dictT.getColumnModel().getColumn(1).setResizable(false);
             dictT.getColumnModel().getColumn(2).setResizable(false);
             dictT.getColumnModel().getColumn(3).setResizable(false);
             dictT.getColumnModel().getColumn(4).setResizable(false);
             dictT.getColumnModel().getColumn(5).setResizable(false);
             dictT.getColumnModel().getColumn(6).setResizable(false);
+            dictT.getColumnModel().getColumn(7).setResizable(false);
         }
 
         dictP.add(jScrollPane1);
-        jScrollPane1.setBounds(110, 50, 690, 320);
+        jScrollPane1.setBounds(60, 140, 690, 250);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel5.setText("Word ID");
         dictP.add(jLabel5);
-        jLabel5.setBounds(120, 390, 60, 30);
+        jLabel5.setBounds(70, 410, 60, 30);
 
         wordT.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -651,21 +701,21 @@ public class Home extends javax.swing.JFrame {
             }
         });
         dictP.add(wordT);
-        wordT.setBounds(190, 440, 140, 30);
+        wordT.setBounds(140, 460, 140, 30);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel2.setText("Select Type ");
         dictP.add(jLabel2);
-        jLabel2.setBounds(360, 390, 80, 30);
+        jLabel2.setBounds(310, 410, 80, 30);
 
         wordTypeCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Select--", "Positive", "Negative" }));
         dictP.add(wordTypeCB);
-        wordTypeCB.setBounds(440, 390, 140, 30);
+        wordTypeCB.setBounds(390, 410, 140, 30);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel3.setText("Score");
         dictP.add(jLabel3);
-        jLabel3.setBounds(360, 440, 50, 30);
+        jLabel3.setBounds(310, 460, 50, 30);
 
         scoreT.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -686,9 +736,8 @@ public class Home extends javax.swing.JFrame {
             }
         });
         dictP.add(scoreT);
-        scoreT.setBounds(440, 440, 140, 30);
+        scoreT.setBounds(390, 460, 140, 30);
 
-        wordSubmitB.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         wordSubmitB.setText("Submit");
         wordSubmitB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -696,14 +745,13 @@ public class Home extends javax.swing.JFrame {
             }
         });
         dictP.add(wordSubmitB);
-        wordSubmitB.setBounds(240, 510, 120, 30);
+        wordSubmitB.setBounds(210, 510, 100, 30);
 
         msgL.setForeground(new java.awt.Color(255, 0, 0));
         msgL.setText("Please enter all the feilds");
         dictP.add(msgL);
-        msgL.setBounds(300, 480, 150, 14);
+        msgL.setBounds(250, 490, 150, 14);
 
-        wordResetB.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         wordResetB.setText("Reset");
         wordResetB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -711,12 +759,12 @@ public class Home extends javax.swing.JFrame {
             }
         });
         dictP.add(wordResetB);
-        wordResetB.setBounds(400, 510, 120, 30);
+        wordResetB.setBounds(330, 510, 100, 30);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel6.setText("Add Word");
         dictP.add(jLabel6);
-        jLabel6.setBounds(120, 440, 80, 30);
+        jLabel6.setBounds(70, 460, 80, 30);
 
         wordIdT.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -737,7 +785,24 @@ public class Home extends javax.swing.JFrame {
             }
         });
         dictP.add(wordIdT);
-        wordIdT.setBounds(190, 390, 140, 30);
+        wordIdT.setBounds(140, 410, 140, 30);
+
+        titleL.setBackground(new java.awt.Color(204, 204, 204));
+        titleL.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
+        titleL.setForeground(new java.awt.Color(0, 51, 255));
+        titleL.setText("                Word Dictionary");
+        titleL.setOpaque(true);
+        dictP.add(titleL);
+        titleL.setBounds(0, 30, 1200, 30);
+
+        updateDictB.setText("Update");
+        updateDictB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateDictBActionPerformed(evt);
+            }
+        });
+        dictP.add(updateDictB);
+        updateDictB.setBounds(60, 100, 80, 30);
 
         adminBaseP.add(dictP);
         dictP.setBounds(0, 0, 1200, 580);
@@ -745,27 +810,20 @@ public class Home extends javax.swing.JFrame {
         settingsP.setBackground(new java.awt.Color(255, 255, 255));
         settingsP.setLayout(null);
 
-        jLabel7.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
-        jLabel7.setText("             Settings");
-        jLabel7.setOpaque(true);
-        settingsP.add(jLabel7);
-        jLabel7.setBounds(0, 30, 1200, 30);
-
-        jButton2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jButton2.setText("Add Type");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        addTypeB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        addTypeB.setText("Add Type");
+        addTypeB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                addTypeBActionPerformed(evt);
             }
         });
-        settingsP.add(jButton2);
-        jButton2.setBounds(370, 120, 100, 30);
+        settingsP.add(addTypeB);
+        addTypeB.setBounds(370, 120, 100, 30);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel4.setText("Filter");
         settingsP.add(jLabel4);
-        jLabel4.setBounds(50, 120, 50, 30);
+        jLabel4.setBounds(70, 120, 50, 30);
 
         settingsCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Department", "Call Type", "Call Category", "Error" }));
         settingsCB.addActionListener(new java.awt.event.ActionListener() {
@@ -774,7 +832,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         settingsP.add(settingsCB);
-        settingsCB.setBounds(110, 120, 120, 30);
+        settingsCB.setBounds(130, 120, 120, 30);
 
         settingsT.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         settingsT.setModel(new javax.swing.table.DefaultTableModel(
@@ -792,7 +850,7 @@ public class Home extends javax.swing.JFrame {
                 java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                true, false, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -820,7 +878,25 @@ public class Home extends javax.swing.JFrame {
         }
 
         settingsP.add(jScrollPane2);
-        jScrollPane2.setBounds(40, 180, 480, 180);
+        jScrollPane2.setBounds(60, 180, 480, 180);
+
+        updateSettB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        updateSettB.setText("Update");
+        updateSettB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateSettBActionPerformed(evt);
+            }
+        });
+        settingsP.add(updateSettB);
+        updateSettB.setBounds(70, 380, 100, 30);
+
+        jLabel13.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel13.setText("                Settings");
+        jLabel13.setOpaque(true);
+        settingsP.add(jLabel13);
+        jLabel13.setBounds(0, 30, 1200, 30);
 
         adminBaseP.add(settingsP);
         settingsP.setBounds(0, 0, 1200, 580);
@@ -828,77 +904,77 @@ public class Home extends javax.swing.JFrame {
         customerP.setBackground(new java.awt.Color(255, 255, 255));
         customerP.setLayout(null);
 
-        jButton14.setText("Add Customer");
-        jButton14.addActionListener(new java.awt.event.ActionListener() {
+        addCustomerB.setText("Add Customer");
+        addCustomerB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton14ActionPerformed(evt);
+                addCustomerBActionPerformed(evt);
             }
         });
-        customerP.add(jButton14);
-        jButton14.setBounds(50, 50, 130, 30);
+        customerP.add(addCustomerB);
+        addCustomerB.setBounds(60, 100, 130, 30);
 
         customerT.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Customer ID", "First Name", "Last Name", "E-mail", "Mobile", "Product/Service", "Warranty Date"
+                "", "Customer ID", "First Name", "Last Name", "E-mail", "Mobile", "Product/Service", "Warranty Date"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -910,28 +986,36 @@ public class Home extends javax.swing.JFrame {
             }
         });
         customerT.setGridColor(new java.awt.Color(0, 0, 0));
-        customerT.setRowHeight(18);
+        customerT.setRowHeight(25);
         customerT.getTableHeader().setReorderingAllowed(false);
+        customerT.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                customerTMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(customerT);
         if (customerT.getColumnModel().getColumnCount() > 0) {
-            customerT.getColumnModel().getColumn(0).setResizable(false);
-            customerT.getColumnModel().getColumn(0).setPreferredWidth(100);
+            customerT.getColumnModel().getColumn(0).setMinWidth(38);
+            customerT.getColumnModel().getColumn(0).setPreferredWidth(38);
+            customerT.getColumnModel().getColumn(0).setMaxWidth(38);
             customerT.getColumnModel().getColumn(1).setResizable(false);
-            customerT.getColumnModel().getColumn(1).setPreferredWidth(150);
+            customerT.getColumnModel().getColumn(1).setPreferredWidth(100);
             customerT.getColumnModel().getColumn(2).setResizable(false);
             customerT.getColumnModel().getColumn(2).setPreferredWidth(150);
             customerT.getColumnModel().getColumn(3).setResizable(false);
+            customerT.getColumnModel().getColumn(3).setPreferredWidth(150);
             customerT.getColumnModel().getColumn(4).setResizable(false);
             customerT.getColumnModel().getColumn(5).setResizable(false);
             customerT.getColumnModel().getColumn(6).setResizable(false);
+            customerT.getColumnModel().getColumn(7).setResizable(false);
         }
 
         customerP.add(jScrollPane5);
-        jScrollPane5.setBounds(50, 100, 1020, 400);
+        jScrollPane5.setBounds(60, 150, 1020, 380);
 
         jButton15.setText("Search");
         customerP.add(jButton15);
-        jButton15.setBounds(750, 50, 80, 30);
+        jButton15.setBounds(760, 100, 80, 30);
 
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -939,16 +1023,15 @@ public class Home extends javax.swing.JFrame {
             }
         });
         customerP.add(jTextField3);
-        jTextField3.setBounds(850, 50, 200, 30);
+        jTextField3.setBounds(860, 100, 200, 30);
 
-        jButton16.setText("Remove Customer");
-        jButton16.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton16ActionPerformed(evt);
-            }
-        });
-        customerP.add(jButton16);
-        jButton16.setBounds(40, 520, 150, 30);
+        jLabel15.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel15.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel15.setText("                Customer Details");
+        jLabel15.setOpaque(true);
+        customerP.add(jLabel15);
+        jLabel15.setBounds(0, 30, 1200, 30);
 
         adminBaseP.add(customerP);
         customerP.setBounds(0, 0, 1200, 580);
@@ -1149,9 +1232,9 @@ public class Home extends javax.swing.JFrame {
         menuEP.setLayout(null);
 
         custEL.setBackground(new java.awt.Color(0, 102, 255));
-        custEL.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        custEL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         custEL.setForeground(new java.awt.Color(255, 255, 255));
-        custEL.setText("Customer Details");
+        custEL.setText("   Customer Details");
         custEL.setOpaque(true);
         custEL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1159,20 +1242,20 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuEP.add(custEL);
-        custEL.setBounds(0, 190, 200, 40);
+        custEL.setBounds(0, 190, 160, 30);
 
         reportsEL.setBackground(new java.awt.Color(0, 102, 255));
-        reportsEL.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        reportsEL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         reportsEL.setForeground(new java.awt.Color(255, 255, 255));
-        reportsEL.setText(" Reports");
+        reportsEL.setText("   Reports");
         reportsEL.setOpaque(true);
         menuEP.add(reportsEL);
-        reportsEL.setBounds(0, 50, 200, 40);
+        reportsEL.setBounds(0, 90, 160, 30);
 
         dictEL.setBackground(new java.awt.Color(0, 102, 255));
-        dictEL.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        dictEL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         dictEL.setForeground(new java.awt.Color(255, 255, 255));
-        dictEL.setText("Dictionary");
+        dictEL.setText("   Dictionary");
         dictEL.setOpaque(true);
         dictEL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1180,13 +1263,14 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuEP.add(dictEL);
-        dictEL.setBounds(0, 120, 200, 40);
+        dictEL.setBounds(0, 140, 160, 30);
 
         employeeP.add(menuEP);
-        menuEP.setBounds(0, 0, 200, 580);
+        menuEP.setBounds(0, 0, 160, 580);
 
         employeeBaseP.setLayout(null);
 
+        dictEP.setBackground(new java.awt.Color(255, 255, 255));
         dictEP.setLayout(null);
 
         dictET.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -1241,11 +1325,20 @@ public class Home extends javax.swing.JFrame {
         jScrollPane4.setViewportView(dictET);
 
         dictEP.add(jScrollPane4);
-        jScrollPane4.setBounds(50, 20, 1060, 520);
+        jScrollPane4.setBounds(50, 100, 1060, 440);
+
+        jLabel11.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel11.setText("                Word Dictionary");
+        jLabel11.setOpaque(true);
+        dictEP.add(jLabel11);
+        jLabel11.setBounds(0, 30, 1200, 30);
 
         employeeBaseP.add(dictEP);
-        dictEP.setBounds(0, 0, 1160, 580);
+        dictEP.setBounds(0, 0, 1200, 580);
 
+        custEP.setBackground(new java.awt.Color(255, 255, 255));
         custEP.setLayout(null);
 
         custET.setModel(new javax.swing.table.DefaultTableModel(
@@ -1326,13 +1419,21 @@ public class Home extends javax.swing.JFrame {
         jScrollPane6.setViewportView(custET);
 
         custEP.add(jScrollPane6);
-        jScrollPane6.setBounds(20, 70, 1100, 480);
+        jScrollPane6.setBounds(50, 90, 1100, 440);
+
+        jLabel12.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel12.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel12.setText("                Customer Details");
+        jLabel12.setOpaque(true);
+        custEP.add(jLabel12);
+        jLabel12.setBounds(0, 30, 1200, 30);
 
         employeeBaseP.add(custEP);
-        custEP.setBounds(0, 0, 1160, 580);
+        custEP.setBounds(0, 0, 1200, 580);
 
         employeeP.add(employeeBaseP);
-        employeeBaseP.setBounds(200, 0, 1160, 580);
+        employeeBaseP.setBounds(160, 0, 1200, 580);
 
         baseP.add(employeeP);
         employeeP.setBounds(0, 0, 1360, 580);
@@ -1350,10 +1451,10 @@ public class Home extends javax.swing.JFrame {
         c.show(baseP, "h");
     }//GEN-LAST:event_homeBActionPerformed
 
-    private void employeeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeBActionPerformed
+    private void employeeInfoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeInfoBActionPerformed
             c.show(baseP, "a");
             c.show(adminBaseP, "e");
-    }//GEN-LAST:event_employeeBActionPerformed
+    }//GEN-LAST:event_employeeInfoBActionPerformed
 
     private void loginBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBActionPerformed
 
@@ -1369,11 +1470,12 @@ public class Home extends javax.swing.JFrame {
             nameL.setText("Manager");
             loginB.setVisible(false);
             accountL.setVisible(true);
-            employeeB.setVisible(true);
+            employeeInfoB.setVisible(true);
             c.show(baseP, "a");
             c.show(adminBaseP, "e");
             gd.createConnection();
-            gd.getEmployeeInfo();
+            connection=gd.getConnection();
+            gd.getEmployeeInfo(empInfoT);
             gd.getDictionary(dictT);
             gd.getCustomer(customerT);
             getSettings();
@@ -1384,10 +1486,11 @@ public class Home extends javax.swing.JFrame {
             loggedL.setVisible(true);
             nameL.setVisible(true);
             nameL.setText("Employee");
-            loginB.setVisible(true);
+            loginB.setVisible(false);
             accountL.setVisible(true);
             c.show(employeeBaseP, "emp");
             gd.createConnection();
+            connection=gd.getConnection();
             gd.getDictionary(dictET);
             gd.getCustomer(custET);
         }
@@ -1458,6 +1561,7 @@ public class Home extends javax.swing.JFrame {
             loggedL.setVisible(false);
             nameL.setVisible(false);
             nameL.setText("");
+            employeeInfoB.setVisible(false);
             loginB.setVisible(true);
             accountL.setVisible(false);
         } 
@@ -1594,7 +1698,7 @@ public class Home extends javax.swing.JFrame {
                             dialog.dob.getDateStringOrEmptyString()+"',"+dialog.cid+",'"+dialog.addressT.getText()+"','"+city+"','"+
                              state+"','India',"+pin+",'"+dialog.emailT.getText()+"','"+dialog.compMailT.getText()+"',"+mobile+","+deskId+","+
                                deptId+",'"+dateJoin+"','',"+10+")";
-            Connection connection=gd.getConnection();
+            //Connection connection=gd.getConnection();
             
             try {
                 Statement st=connection.createStatement();
@@ -1607,7 +1711,7 @@ public class Home extends javax.swing.JFrame {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            gd.getEmployeeInfo();
+            gd.getEmployeeInfo(empInfoT);
             //System.out.println("Success");
         }
     }//GEN-LAST:event_jButton13ActionPerformed
@@ -1615,12 +1719,6 @@ public class Home extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        RemoveEmployee dialog= new RemoveEmployee(this, true);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-    }//GEN-LAST:event_jButton11ActionPerformed
 
     private void editDictLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editDictLMouseEntered
         // TODO add your handling code here:
@@ -1646,13 +1744,17 @@ public class Home extends javax.swing.JFrame {
              String q="insert into word_dictionary values("+wordIdT.getText()+",'"+wordT.getText()+"','"+wordTypeCB.getSelectedItem()+
                      "',"+scoreT.getText()+","+101+",'"+dateJoin+"','"+dateJoin+"','"+dateJoin+"')";
              
-             Connection connection=gd.getConnection();
+             //Connection connection=gd.getConnection();
             
             try {
                 Statement st=connection.createStatement();
                 st.execute("alter session set NLS_DATE_FORMAT= \"YYYY-MM-DD\"");
                 st.execute(q);
                 st.execute("commit");
+                wordT.setText("");
+                scoreT.setText("");
+                wordIdT.setText("");
+                wordTypeCB.setSelectedIndex(0);
             } catch (SQLException ex) {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1695,18 +1797,18 @@ public class Home extends javax.swing.JFrame {
         switch(k){
             case 0: getSettings();
                     break;
-            case 1: gd.getDepartment();
+            case 1: gd.getDepartment(settingsT);
                     break;
-            case 2: gd.getCallType(1);
+            case 2: gd.getCallType(1,settingsT);
                     break;
-            case 3: gd.getCallCategory(1);
+            case 3: gd.getCallCategory(1,settingsT);
                     break;
-            case 4: gd.getError(1);
+            case 4: gd.getError(1,settingsT);
                     break;
         }
     }//GEN-LAST:event_settingsCBActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void addTypeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTypeBActionPerformed
         AddSettings dialog= new AddSettings(this, true);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
@@ -1726,7 +1828,7 @@ public class Home extends javax.swing.JFrame {
                         break;
             }
             
-            Connection connection=gd.getConnection();
+           // Connection connection=gd.getConnection();
             
             try {
                 Statement st=connection.createStatement();
@@ -1740,13 +1842,14 @@ public class Home extends javax.swing.JFrame {
             getSettings();
             settingsCB.setSelectedItem("All");
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_addTypeBActionPerformed
 
     private void wordResetBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wordResetBActionPerformed
             wordT.setText("");
             scoreT.setText("");
             wordIdT.setText("");
             wordTypeCB.setSelectedIndex(0);
+            msgL.setVisible(false);
     }//GEN-LAST:event_wordResetBActionPerformed
 
     private void wordIdTFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_wordIdTFocusLost
@@ -1773,16 +1876,16 @@ public class Home extends javax.swing.JFrame {
         msgL.setVisible(false);
     }//GEN-LAST:event_scoreTFocusGained
 
-    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+    private void addCustomerBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerBActionPerformed
        AddCustomer dialog=new AddCustomer(this, shown);
        dialog.setLocationRelativeTo(this);
        dialog.setVisible(true);
        
-       if(dialog.added=true){
+       if(dialog.added){
            String query="insert into customer values("+dialog.customerIdT.getText()+",'"+dialog.customerFN.getText()+"','"+
                    dialog.customerLNT.getText()+"','"+dialog.customerEmailT.getText()+"',"+dialog.customerMobT.getText()
                    +",'"+dialog.prodServiceT.getText()+"','Yes','"+dialog.warrantyD.getDateStringOrEmptyString()+"')";
-            Connection connection=gd.getConnection();
+           // Connection connection=gd.getConnection();
             
             try {
                 Statement st=connection.createStatement();
@@ -1796,47 +1899,297 @@ public class Home extends javax.swing.JFrame {
             
             gd.getCustomer(customerT);
        }
-    }//GEN-LAST:event_jButton14ActionPerformed
+    }//GEN-LAST:event_addCustomerBActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
-    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-        RemoveCustomer dialog= new RemoveCustomer(this, true);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-    }//GEN-LAST:event_jButton16ActionPerformed
-
     private void settingsTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTMouseClicked
         int column = settingsT.getColumnModel().getColumnIndexAtX(evt.getX());
         int row    = evt.getY()/settingsT.getRowHeight(); 
-        System.out.println("Col :"+column + " row:"+row);
+        //System.out.println("Col :"+column + " row:"+row);
+        
+        if(column==0){
+            Object type = settingsT.getValueAt(row, 2);
+            Object category= settingsT.getValueAt(row, 1);
+            Object id=settingsT.getValueAt(row, 3);
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete\n"+category+"  "+type, "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            
+            String query="";
+            
+            if(response==JOptionPane.YES_OPTION){
+                
+                if(category=="Department")
+                    query="delete from department where dept_id="+id;
+                else if(category=="Call Type")
+                    query="delete from call_type where type_id="+id;
+                else if(category=="Call Category")
+                    query="delete from category where category_id="+id;
+                else if(category=="Error")
+                    query="delete from error_type where error_id="+id;
 
-        if (row < settingsT.getRowCount() && row >= 0 && column < settingsT.getColumnCount() && column >= 0) {
-          Object value = settingsT.getValueAt(row, 1);
-          //System.out.println("Value :"+value.getClass().getName());
-          System.out.println("Value :"+value);
-          
+                try {
+                    Statement st=connection.createStatement();
+                    st.execute(query);
+                    st.execute("commit");
+                    getSettings();
+                    JOptionPane.showMessageDialog(this,"Entry Deleted Successfully","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                getSettings();
+            }
+        }
+
+//        if (row < settingsT.getRowCount() && row >= 0 && column < settingsT.getColumnCount() && column >= 0) {
+//          Object value = settingsT.getValueAt(row, 1);
+//          System.out.println("Value :"+value.getClass().getName());
+//          System.out.println("Value :"+value);
+//          
 //          if (value instanceof JButton) {
 //            ((JButton)value).doClick();
 //          }
-        }
+//        }
     }//GEN-LAST:event_settingsTMouseClicked
 
     private void custELMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_custELMouseClicked
-        // TODO add your handling code here:
         c.show(employeeBaseP,"cemp");
     }//GEN-LAST:event_custELMouseClicked
 
     private void dictELMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dictELMouseClicked
-        // TODO add your handling code here:
         c.show(employeeBaseP,"demp");
     }//GEN-LAST:event_dictELMouseClicked
+
+    private void updateSettBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSettBActionPerformed
+        int row=settingsT.getSelectedRow();
+        if(row!=-1){
+            //update <table name> set (<col1 = val1, col2 = val2,col3 = val3,?) where <expression identifying rows to change>;
+            Object type = settingsT.getValueAt(row, 2);
+            Object category= settingsT.getValueAt(row, 1);
+            Object id=settingsT.getValueAt(row, 3);
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to update ?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            
+            String query="";
+            
+            if(response==JOptionPane.YES_OPTION){
+                
+                if(category=="Department")
+                    query="update department set deptname = '" +type+"' where dept_id="+id;
+                else if(category=="Call Type")
+                    query="update call_type set description = '" +type+"' where type_id="+id;
+                else if(category=="Call Category")
+                    query="update category set description = '" +type+"' where category_id="+id;
+                else if(category=="Error")
+                    query="update error_type set description = '" +type+"' where error_id="+id;
+
+                try {
+                    Statement st=connection.createStatement();
+                    st.execute(query);
+                    st.execute("commit");
+                    //getSettings();
+                    JOptionPane.showMessageDialog(this,"Update Successfull","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                getSettings();
+            }
+
+        }
+    }//GEN-LAST:event_updateSettBActionPerformed
+
+    private void empInfoTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_empInfoTMouseClicked
+        int column = empInfoT.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row    = evt.getY()/empInfoT.getRowHeight(); 
+        //System.out.println("Col :"+column + " row:"+row);
+        
+        if(column==0){
+            Object id = empInfoT.getValueAt(row, 1);
+            Object fname= empInfoT.getValueAt(row, 2);
+            Object lname=empInfoT.getValueAt(row, 3);
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete\n"+fname+" "+lname, "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if(response==JOptionPane.YES_OPTION){
+               
+                String query="delete from employee where employee_id="+id;
+
+                try {
+                    Statement st=connection.createStatement();
+                    st.execute(query);
+                    st.execute("commit");
+                    JOptionPane.showMessageDialog(this,"Employee Deleted Successfully","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                gd.getEmployeeInfo(empInfoT);
+            }
+        }
+    }//GEN-LAST:event_empInfoTMouseClicked
+
+    private void updateEmpInfoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateEmpInfoBActionPerformed
+        int row=empInfoT.getSelectedRow();
+        if(row!=-1){
+            
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to update ?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            
+            
+            if(response==JOptionPane.YES_OPTION){
+
+               Date date = (Date) empInfoT.getValueAt(row, 4);
+               java.sql.Date sqlDate;
+                sqlDate = new java.sql.Date(date.getTime());
+
+                try {
+                    PreparedStatement stmt=connection.prepareStatement(
+                       "update employee set first_name=?, last_name=?, dob=?, address=?, city=?, state=?, country=?, pincode=?, emailid=?, "
+                               + "company_mail=?, mobile=?, desk_id=?, dept_id=? where employee_id=?");
+                    
+                    stmt.setString(1, (String)empInfoT.getValueAt(row, 2));
+                    stmt.setString(2, (String)empInfoT.getValueAt(row, 3));
+                    stmt.setDate(3, sqlDate);
+                    stmt.setString(4, (String)empInfoT.getValueAt(row, 6));
+                    stmt.setString(5, (String)empInfoT.getValueAt(row, 7));
+                    stmt.setString(6, (String)empInfoT.getValueAt(row, 8));
+                    stmt.setString(7, (String)empInfoT.getValueAt(row, 9));
+                    stmt.setInt(8, (int)empInfoT.getValueAt(row, 10));
+                    stmt.setString(9, (String)empInfoT.getValueAt(row, 11));
+                    stmt.setString(10, (String)empInfoT.getValueAt(row, 12));
+                   stmt.setLong(11, (long)empInfoT.getValueAt(row, 13));
+                   stmt.setInt(12, (int)empInfoT.getValueAt(row, 14));
+                    stmt.setInt(13, (int)empInfoT.getValueAt(row, 15));
+                    stmt.setInt(14, (int)empInfoT.getValueAt(row, 1));
+                    
+                    Statement st=connection.createStatement();
+                    st.execute("alter session set NLS_DATE_FORMAT= \"YYYY-MM-DD\"");
+                    stmt.executeUpdate();
+                    st.execute("commit");
+                    JOptionPane.showMessageDialog(this,"Update Successfull","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this,"Update Failed","",JOptionPane.PLAIN_MESSAGE);
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                gd.getEmployeeInfo(empInfoT);
+            }
+
+        }
+    }//GEN-LAST:event_updateEmpInfoBActionPerformed
+
+    private void updateDictBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateDictBActionPerformed
+        int row=dictT.getSelectedRow();
+        if(row!=-1){
+            
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to update ?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            
+            
+            if(response==JOptionPane.YES_OPTION){
+                
+                
+                try {
+                    
+                    //Date Formating
+                    String d=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
+                    java.util.Date date = sdf1.parse(d);
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    
+                    PreparedStatement stmt=connection.prepareStatement(
+                       "update WORD_DICTIONARY set DESCRIPTION=?, CATEGORY=?, SCORE=?, APPROVED_BY=? where WORD_ID=?");
+                    
+                    stmt.setString(1, (String)dictT.getValueAt(row, 2));
+                    stmt.setString(2, (String)dictT.getValueAt(row, 3));
+                    stmt.setInt(3, (int)dictT.getValueAt(row, 4));
+                    stmt.setInt(4, 202);
+                    stmt.setInt(5, (int)dictT.getValueAt(row, 1));
+                   
+                         
+                    Statement st=connection.createStatement();
+                    st.execute("alter session set NLS_DATE_FORMAT= \"YYYY-MM-DD\"");
+                   // st.executeUpdate(q);
+                    stmt.executeUpdate();
+                    st.execute("commit");
+                    JOptionPane.showMessageDialog(this,"Update Successfull","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this,"Update Failed","",JOptionPane.PLAIN_MESSAGE);
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) { 
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                gd.getDictionary(dictT);
+            }
+
+        }
+    }//GEN-LAST:event_updateDictBActionPerformed
+
+    private void dictTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dictTMouseClicked
+        int column = dictT.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row    = evt.getY()/dictT.getRowHeight(); 
+        //System.out.println("Col :"+column + " row:"+row);
+        
+        if(column==0){
+            Object id = dictT.getValueAt(row, 1);
+            Object word= dictT.getValueAt(row, 2);
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete "+word+" ?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if(response==JOptionPane.YES_OPTION){
+               
+                String query="delete from word_dictionary where word_id="+id;
+
+                try {
+                    Statement st=connection.createStatement();
+                    st.execute(query);
+                    st.execute("commit");
+                    JOptionPane.showMessageDialog(this,"Word Deleted Successfully","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                gd.getDictionary(dictT);
+            }
+        }
+    }//GEN-LAST:event_dictTMouseClicked
+
+    private void customerTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerTMouseClicked
+        int column = customerT.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row    = evt.getY()/customerT.getRowHeight(); 
+        //System.out.println("Col :"+column + " row:"+row);
+        
+        if(column==0){
+            Object id= customerT.getValueAt(row, 0);
+            Object fname= customerT.getValueAt(row, 1);
+            Object lname=customerT.getValueAt(row, 2);
+            int response=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete\n"+fname+" "+lname, "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if(response==JOptionPane.YES_OPTION){
+               
+                String query="delete from customer where customer_id="+id;
+
+                try {
+                    Statement st=connection.createStatement();
+                    st.execute(query);
+                    st.execute("commit");
+                    JOptionPane.showMessageDialog(this,"Customer Deleted Successfully","",JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                gd.getCustomer(customerT);
+            }
+        }
+    }//GEN-LAST:event_customerTMouseClicked
     
     public static void main(String args[]) {
-
-        
         
             try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1872,6 +2225,8 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton aboutUsB;
     private javax.swing.JLabel accountL;
     private javax.swing.JPanel accountP;
+    private javax.swing.JButton addCustomerB;
+    private javax.swing.JButton addTypeB;
     private javax.swing.JPanel adminBaseP;
     private javax.swing.JPanel adminP;
     private javax.swing.JPanel baseP;
@@ -1888,8 +2243,8 @@ public class Home extends javax.swing.JFrame {
     public javax.swing.JTable dictT;
     private javax.swing.JLabel editDictL;
     public javax.swing.JTable empInfoT;
-    private javax.swing.JButton employeeB;
     private javax.swing.JPanel employeeBaseP;
+    private javax.swing.JButton employeeInfoB;
     private javax.swing.JPanel employeeInfoP;
     private javax.swing.JPanel employeeP;
     private javax.swing.JButton homeB;
@@ -1898,20 +2253,20 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel imageL;
     private javax.swing.JLabel incomingRL;
     private javax.swing.JLabel individualRL;
-    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1941,6 +2296,10 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel settingsL;
     private javax.swing.JPanel settingsP;
     public javax.swing.JTable settingsT;
+    private javax.swing.JLabel titleL;
+    private javax.swing.JButton updateDictB;
+    private javax.swing.JButton updateEmpInfoB;
+    private javax.swing.JButton updateSettB;
     private javax.swing.JTextField wordIdT;
     private javax.swing.JButton wordResetB;
     private javax.swing.JButton wordSubmitB;

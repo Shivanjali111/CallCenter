@@ -282,11 +282,11 @@ public class AddEmployee extends javax.swing.JDialog {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(20, 10, 150, 30);
         getContentPane().add(jSeparator1);
-        jSeparator1.setBounds(-10, 430, 330, 10);
+        jSeparator1.setBounds(-10, 430, 700, 10);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(0, 40, 320, 10);
+        jSeparator2.setBounds(0, 40, 680, 10);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(0, 230, 320, 10);
+        jSeparator3.setBounds(0, 230, 680, 10);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel5.setText("Mobile No");

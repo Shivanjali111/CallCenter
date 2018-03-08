@@ -9,7 +9,7 @@ import javax.swing.table.TableCellRenderer;
 
 class JLabelCellenderer extends JLabel implements TableCellRenderer {
  
-    public JLabelCellenderer(Home h, JTable t) {
+    public JLabelCellenderer() {
         setOpaque(true);
         setBackground(Color.WHITE);
          java.net.URL imgURL = getClass().getResource("/icons/delete.png");
