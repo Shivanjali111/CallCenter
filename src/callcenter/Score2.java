@@ -1,7 +1,9 @@
 package callcenter;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 public class Score2 {
 
     public static void main(String args[]) throws Exception {
-        
+             
         int positive=0,temp=0;
         int negative=0;
         int score=0;
@@ -22,7 +24,7 @@ public class Score2 {
         int[] count = new int[100];
         int[] points = new int[100];
 
-        FileReader fr = new FileReader("d:\\words.txt");
+        FileReader fr = new FileReader("D:\\words.txt");
         BufferedReader br = new BufferedReader(fr);
         String line = br.readLine();
         while (line != null) {
@@ -94,6 +96,6 @@ public class Score2 {
 
         } catch (Exception e) {
             System.err.println(e);
-        }        
+        }
     }
 }

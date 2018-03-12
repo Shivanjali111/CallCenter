@@ -23,6 +23,36 @@ public class GetData {
         return connection;
     }
     
+    public void getReport1(JTable t){
+        DefaultTableModel dtm = (DefaultTableModel) t.getModel();
+         dtm.setRowCount(0);
+         try{
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from score");
+              while (rs.next()){
+                  
+                  
+                  int agent_id=rs.getInt("agent_id");
+                  int call_id= rs.getInt("call_id");
+                  int positive_words_used=rs.getInt("positive_words_used");
+                  int good_score=rs.getInt("good_score");
+                  int neg_words_used=rs.getInt("neg_words_used");
+                  int slang_score=rs.getInt("slang_score");
+                  int overall_score=rs.getInt("overall_score");
+                  String name=null;
+                  
+                  //===============Get Agent Name=====================
+                  ResultSet rs1 = stmt.executeQuery("select first_name, last_name from employee where employee_id="+agent_id);
+                  while (rs1.next()) name=rs1.getString("first_name")+" "+rs1.getString("last_name");
+
+                  Object[] row = {call_id,name,agent_id,positive_words_used,good_score,neg_words_used,slang_score,overall_score};
+                  dtm.addRow(row);
+              }
+        }catch(SQLException ex){
+            Logger.getLogger(GetData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void getDictionary(JTable t){
         DefaultTableModel dtm = (DefaultTableModel) t.getModel();
          dtm.setRowCount(0);
