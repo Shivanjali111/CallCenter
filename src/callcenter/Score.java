@@ -103,7 +103,7 @@ public class Score {
 
         for (File file : listOfFiles) {
             if (file.isFile()) {
-                System.out.println("\n");
+                System.out.println(file.getPath());
                 score.calculate(file.getPath());
                 System.out.println("\n\n===================================================================");
             }

@@ -28,6 +28,7 @@ public class GetData {
          dtm.setRowCount(0);
          try{
             Statement stmt = connection.createStatement();
+            Statement s = connection.createStatement();
             ResultSet rs = stmt.executeQuery("select * from score");
               while (rs.next()){
                   
@@ -42,7 +43,7 @@ public class GetData {
                   String name=null;
                   
                   //===============Get Agent Name=====================
-                  ResultSet rs1 = stmt.executeQuery("select first_name, last_name from employee where employee_id="+agent_id);
+                  ResultSet rs1 = s.executeQuery("select first_name, last_name from employee where employee_id="+agent_id);
                   while (rs1.next()) name=rs1.getString("first_name")+" "+rs1.getString("last_name");
 
                   Object[] row = {call_id,name,agent_id,positive_words_used,good_score,neg_words_used,slang_score,overall_score};
