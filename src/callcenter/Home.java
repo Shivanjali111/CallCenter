@@ -54,6 +54,7 @@ public class Home extends javax.swing.JFrame {
         baseP.add(homeP, "h");
         baseP.add(adminP, "a");
         baseP.add(employeeP, "emp");
+        baseP.add(aboutUsP,"abtus");
         adminBaseP.setLayout(c);
         adminBaseP.add(employeeInfoP, "e");
         adminBaseP.add(customerP, "c");
@@ -152,6 +153,32 @@ public class Home extends javax.swing.JFrame {
         gd.getCallCategory(0, settingsT);
         gd.getError(0, settingsT);
     }
+    
+    public void addCust(){
+         AddCustomer dialog = new AddCustomer(this, shown);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
+        if (dialog.added) {
+            String query = "insert into customer values(" + dialog.customerIdT.getText() + ",'" + dialog.customerFN.getText() + "','"
+                    + dialog.customerLNT.getText() + "','" + dialog.customerEmailT.getText() + "'," + dialog.customerMobT.getText()
+                    + ",'" + dialog.serviceC.getSelectedItem() + "','Yes','" + dialog.dateOfPurchaseD.getDateStringOrEmptyString() + "')";
+            // Connection connection=gd.getConnection();
+
+            try {
+                Statement st = connection.createStatement();
+                st.execute("alter session set NLS_DATE_FORMAT= \"YYYY-MM-DD\"");
+                st.execute(query);
+                st.execute("commit");
+                JOptionPane.showMessageDialog(this, "Customer Added Successfully", "", JOptionPane.PLAIN_MESSAGE);
+            } catch (SQLException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            gd.getCustomer(customerT);
+            //searchTable(customerT, customerSearchTB);
+        }
+    }
 
     private void ExpandReportsP() {
         if (!reportsT.isRunning()) {
@@ -227,12 +254,12 @@ public class Home extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         menuBar = new javax.swing.JPanel();
         homeB = new javax.swing.JButton();
-        aboutUsB = new javax.swing.JButton();
         loginB = new javax.swing.JButton();
         employeeInfoB = new javax.swing.JButton();
         nameL = new javax.swing.JLabel();
         loggedL = new javax.swing.JLabel();
         accountL = new javax.swing.JLabel();
+        aboutUsB1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         icon = new javax.swing.JLabel();
         accountP = new javax.swing.JPanel();
@@ -325,6 +352,16 @@ public class Home extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         custET = new javax.swing.JTable();
         jLabel12 = new javax.swing.JLabel();
+        addCustomerB1 = new javax.swing.JButton();
+        searchL7 = new javax.swing.JLabel();
+        customerSearchTB1 = new javax.swing.JTextField();
+        aboutUsP = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
 
         popupMenu1.setLabel("popupMenu1");
 
@@ -357,19 +394,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuBar.add(homeB);
-        homeB.setBounds(0, 0, 90, 40);
-
-        aboutUsB.setBackground(new java.awt.Color(102, 102, 255));
-        aboutUsB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        aboutUsB.setForeground(new java.awt.Color(255, 255, 255));
-        aboutUsB.setText("About Us");
-        aboutUsB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aboutUsBActionPerformed(evt);
-            }
-        });
-        menuBar.add(aboutUsB);
-        aboutUsB.setBounds(90, 0, 110, 40);
+        homeB.setBounds(0, 0, 110, 40);
 
         loginB.setBackground(new java.awt.Color(102, 102, 255));
         loginB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -381,7 +406,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuBar.add(loginB);
-        loginB.setBounds(200, 0, 130, 40);
+        loginB.setBounds(240, 0, 130, 40);
 
         employeeInfoB.setBackground(new java.awt.Color(102, 102, 255));
         employeeInfoB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -393,7 +418,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuBar.add(employeeInfoB);
-        employeeInfoB.setBounds(200, 0, 130, 40);
+        employeeInfoB.setBounds(240, 0, 130, 40);
 
         nameL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         nameL.setForeground(new java.awt.Color(255, 255, 255));
@@ -417,6 +442,18 @@ public class Home extends javax.swing.JFrame {
         });
         menuBar.add(accountL);
         accountL.setBounds(1320, 0, 40, 40);
+
+        aboutUsB1.setBackground(new java.awt.Color(102, 102, 255));
+        aboutUsB1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        aboutUsB1.setForeground(new java.awt.Color(255, 255, 255));
+        aboutUsB1.setText("About Us");
+        aboutUsB1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutUsB1ActionPerformed(evt);
+            }
+        });
+        menuBar.add(aboutUsB1);
+        aboutUsB1.setBounds(120, 0, 110, 40);
 
         jPanel1.add(menuBar);
         menuBar.setBounds(0, 90, 1370, 40);
@@ -744,7 +781,7 @@ public class Home extends javax.swing.JFrame {
         msgL.setForeground(new java.awt.Color(255, 0, 0));
         msgL.setText("Please enter all the feilds");
         dictP.add(msgL);
-        msgL.setBounds(250, 490, 150, 14);
+        msgL.setBounds(250, 490, 150, 20);
 
         wordResetB.setText("Reset");
         wordResetB.addActionListener(new java.awt.event.ActionListener() {
@@ -1444,7 +1481,7 @@ public class Home extends javax.swing.JFrame {
         jScrollPane6.setViewportView(custET);
 
         custEP.add(jScrollPane6);
-        jScrollPane6.setBounds(50, 90, 1100, 440);
+        jScrollPane6.setBounds(50, 150, 1100, 440);
 
         jLabel12.setBackground(new java.awt.Color(204, 204, 204));
         jLabel12.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
@@ -1453,6 +1490,28 @@ public class Home extends javax.swing.JFrame {
         jLabel12.setOpaque(true);
         custEP.add(jLabel12);
         jLabel12.setBounds(0, 0, 1200, 40);
+
+        addCustomerB1.setText("Add Customer");
+        addCustomerB1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCustomerB1ActionPerformed(evt);
+            }
+        });
+        custEP.add(addCustomerB1);
+        addCustomerB1.setBounds(60, 80, 130, 30);
+
+        searchL7.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        searchL7.setText("Search");
+        custEP.add(searchL7);
+        searchL7.setBounds(830, 80, 50, 30);
+
+        customerSearchTB1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerSearchTB1ActionPerformed(evt);
+            }
+        });
+        custEP.add(customerSearchTB1);
+        customerSearchTB1.setBounds(880, 80, 200, 30);
 
         employeeBaseP.add(custEP);
         custEP.setBounds(0, 0, 1200, 580);
@@ -1463,6 +1522,44 @@ public class Home extends javax.swing.JFrame {
         baseP.add(employeeP);
         employeeP.setBounds(0, 0, 1360, 580);
 
+        aboutUsP.setBackground(new java.awt.Color(255, 255, 255));
+        aboutUsP.setLayout(null);
+
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel8.setText(" About Us");
+        aboutUsP.add(jLabel8);
+        jLabel8.setBounds(0, 0, 1360, 50);
+
+        jPanel2.setBackground(new java.awt.Color(0, 204, 204));
+        jPanel2.setLayout(null);
+
+        jTextArea1.setBackground(new java.awt.Color(0, 204, 204));
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
+        jTextArea1.setRows(5);
+        jTextArea1.setText("\t         Description\n");
+        jScrollPane8.setViewportView(jTextArea1);
+
+        jPanel2.add(jScrollPane8);
+        jScrollPane8.setBounds(610, 40, 460, 440);
+
+        jTextArea2.setBackground(new java.awt.Color(0, 204, 204));
+        jTextArea2.setColumns(20);
+        jTextArea2.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
+        jTextArea2.setRows(5);
+        jTextArea2.setText("\t             Project By\n\n - Shivanjali Gaikwad\n - Simran Gulati\n - Pooja Choudhary\n - Trupti Dere\n\n\t          Guide \n - Prof.Muzaffar Shabad");
+        jScrollPane9.setViewportView(jTextArea2);
+
+        jPanel2.add(jScrollPane9);
+        jScrollPane9.setBounds(16, 40, 460, 440);
+
+        aboutUsP.add(jPanel2);
+        jPanel2.setBounds(0, 70, 1410, 620);
+
+        baseP.add(aboutUsP);
+        aboutUsP.setBounds(0, 0, 1360, 580);
+
         jPanel1.add(baseP);
         baseP.setBounds(0, 130, 1370, 580);
 
@@ -1471,10 +1568,6 @@ public class Home extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void homeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBActionPerformed
-        c.show(baseP, "h");
-    }//GEN-LAST:event_homeBActionPerformed
 
     private void employeeInfoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeInfoBActionPerformed
         c.show(baseP, "a");
@@ -1489,6 +1582,7 @@ public class Home extends javax.swing.JFrame {
         if (dialog.flag == 1) {
 
             loggedIn = true;
+            homeB.setVisible(false);
             c.show(baseP, "a");
             loggedL.setVisible(true);
             nameL.setVisible(true);
@@ -1514,6 +1608,8 @@ public class Home extends javax.swing.JFrame {
 
         } else if (dialog.flag == 2) {
             loggedIn = true;
+            aboutUsB1.setVisible(false);
+            homeB.setVisible(false);
             c.show(baseP, "emp");
             loggedL.setVisible(true);
             nameL.setVisible(true);
@@ -1525,7 +1621,7 @@ public class Home extends javax.swing.JFrame {
             connection = gd.getConnection();
             gd.getDictionary(dictET);
             gd.getCustomer(custET);
-
+            searchTable(custET, customerSearchTB1);
             searchTable(dictET, empDictSearchTB);
         }
 
@@ -1536,9 +1632,10 @@ public class Home extends javax.swing.JFrame {
         accountP.setVisible(false);
     }//GEN-LAST:event_jPanel1MouseEntered
 
-    private void aboutUsBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutUsBActionPerformed
+    private void homeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_aboutUsBActionPerformed
+        c.show(baseP, "h");
+    }//GEN-LAST:event_homeBActionPerformed
 
     private void logoutLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutLMouseEntered
         logoutL.setBackground(new Color(0, 102, 204));
@@ -1926,29 +2023,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_scoreTFocusGained
 
     private void addCustomerBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerBActionPerformed
-        AddCustomer dialog = new AddCustomer(this, shown);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-
-        if (dialog.added) {
-            String query = "insert into customer values(" + dialog.customerIdT.getText() + ",'" + dialog.customerFN.getText() + "','"
-                    + dialog.customerLNT.getText() + "','" + dialog.customerEmailT.getText() + "'," + dialog.customerMobT.getText()
-                    + ",'" + dialog.serviceC.getSelectedItem() + "','Yes','" + dialog.dateOfPurchaseD.getDateStringOrEmptyString() + "')";
-            // Connection connection=gd.getConnection();
-
-            try {
-                Statement st = connection.createStatement();
-                st.execute("alter session set NLS_DATE_FORMAT= \"YYYY-MM-DD\"");
-                st.execute(query);
-                st.execute("commit");
-                JOptionPane.showMessageDialog(this, "Customer Added Successfully", "", JOptionPane.PLAIN_MESSAGE);
-            } catch (SQLException ex) {
-                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            gd.getCustomer(customerT);
-            //searchTable(customerT, customerSearchTB);
-        }
+       addCust();
     }//GEN-LAST:event_addCustomerBActionPerformed
 
     private void settingsTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTMouseClicked
@@ -2281,6 +2356,20 @@ public class Home extends javax.swing.JFrame {
         gd.getEmployeeInfo(empInfoT);
     }//GEN-LAST:event_refreshB3ActionPerformed
 
+    private void addCustomerB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerB1ActionPerformed
+        // TODO add your handling code here:
+        addCust();
+    }//GEN-LAST:event_addCustomerB1ActionPerformed
+
+    private void customerSearchTB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerSearchTB1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_customerSearchTB1ActionPerformed
+
+    private void aboutUsB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutUsB1ActionPerformed
+        // TODO add your handling code here:
+        c.show(baseP, "abtus");
+    }//GEN-LAST:event_aboutUsB1ActionPerformed
+
     public static void main(String args[]) {
 
         try {
@@ -2313,10 +2402,12 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton aboutUsB;
+    private javax.swing.JButton aboutUsB1;
+    private javax.swing.JPanel aboutUsP;
     private javax.swing.JLabel accountL;
     private javax.swing.JPanel accountP;
     private javax.swing.JButton addCustomerB;
+    private javax.swing.JButton addCustomerB1;
     private javax.swing.JButton addEmpB;
     private javax.swing.JButton addTypeB;
     private javax.swing.JPanel adminBaseP;
@@ -2328,6 +2419,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel customerDetailsL;
     private javax.swing.JPanel customerP;
     private javax.swing.JTextField customerSearchTB;
+    private javax.swing.JTextField customerSearchTB1;
     public javax.swing.JTable customerT;
     private javax.swing.JLabel dictEL;
     private javax.swing.JPanel dictEP;
@@ -2363,7 +2455,9 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -2371,7 +2465,11 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel loggedL;
     private javax.swing.JButton loginB;
     private javax.swing.JLabel logoutL;
@@ -2402,6 +2500,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel searchL4;
     private javax.swing.JLabel searchL5;
     private javax.swing.JLabel searchL6;
+    private javax.swing.JLabel searchL7;
     private javax.swing.JComboBox<String> settingsCB;
     private javax.swing.JLabel settingsL;
     private javax.swing.JPanel settingsP;
