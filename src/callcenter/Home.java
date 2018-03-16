@@ -43,10 +43,10 @@ public class Home extends javax.swing.JFrame {
         this.setExtendedState(Home.MAXIMIZED_BOTH);
         ImageChange();
         empInfoT.setAutoResizeMode(empInfoT.AUTO_RESIZE_OFF);
+        aboutUsB1.setVisible(true);
         loggedL.setVisible(false);
         nameL.setVisible(false);
         msgL.setVisible(false);
-        employeeInfoB.setVisible(false);
         accountP.setVisible(false);
         accountL.setVisible(false);
         reportsP.setVisible(false);
@@ -186,7 +186,7 @@ public class Home extends javax.swing.JFrame {
             h = reportsP.getHeight();
             sy = settingsL.getY();
             dy = editDictL.getY();
-            cy = customerDetailsL.getY();
+            cy = employeeInfoL.getY();
             show_reports_p = true;
             reportsP.setVisible(true);
 
@@ -201,7 +201,7 @@ public class Home extends javax.swing.JFrame {
                     reportsP.setBounds(0, reportsP.getY(), reportsP.getWidth(), h);
                     settingsL.setBounds(0, sy, settingsL.getWidth(), settingsL.getHeight());
                     editDictL.setBounds(0, dy, editDictL.getWidth(), editDictL.getHeight());
-                    customerDetailsL.setBounds(0, cy, customerDetailsL.getWidth(), customerDetailsL.getHeight());
+                    employeeInfoL.setBounds(0, cy, employeeInfoL.getWidth(), employeeInfoL.getHeight());
 
                     if (h >= 120) {
                         reportsT.stop();
@@ -219,7 +219,7 @@ public class Home extends javax.swing.JFrame {
             h = reportsP.getHeight();
             sy = settingsL.getY();
             dy = editDictL.getY();
-            cy = customerDetailsL.getY();
+            cy = employeeInfoL.getY();
             show_reports_p = false;
 
             reportsT = new Timer(10, new ActionListener() {
@@ -233,7 +233,7 @@ public class Home extends javax.swing.JFrame {
                     reportsP.setBounds(0, reportsP.getY(), reportsP.getWidth(), h);
                     settingsL.setBounds(0, sy, settingsL.getWidth(), settingsL.getHeight());
                     editDictL.setBounds(0, dy, editDictL.getWidth(), editDictL.getHeight());
-                    customerDetailsL.setBounds(0, cy, customerDetailsL.getWidth(), customerDetailsL.getHeight());
+                    employeeInfoL.setBounds(0, cy, employeeInfoL.getWidth(), employeeInfoL.getHeight());
                     if (h <= 1) {
                         reportsP.setVisible(false);
                         //settingsL.setBounds(0, temp,settingsL.getWidth(), settingsL.getHeight());
@@ -255,7 +255,6 @@ public class Home extends javax.swing.JFrame {
         menuBar = new javax.swing.JPanel();
         homeB = new javax.swing.JButton();
         loginB = new javax.swing.JButton();
-        employeeInfoB = new javax.swing.JButton();
         nameL = new javax.swing.JLabel();
         loggedL = new javax.swing.JLabel();
         accountL = new javax.swing.JLabel();
@@ -335,7 +334,8 @@ public class Home extends javax.swing.JFrame {
         individualRL = new javax.swing.JLabel();
         overallRL = new javax.swing.JLabel();
         editDictL = new javax.swing.JLabel();
-        customerDetailsL = new javax.swing.JLabel();
+        employeeInfoL = new javax.swing.JLabel();
+        customerDetailsL1 = new javax.swing.JLabel();
         employeeP = new javax.swing.JPanel();
         menuEP = new javax.swing.JPanel();
         custEL = new javax.swing.JLabel();
@@ -407,18 +407,6 @@ public class Home extends javax.swing.JFrame {
         });
         menuBar.add(loginB);
         loginB.setBounds(240, 0, 130, 40);
-
-        employeeInfoB.setBackground(new java.awt.Color(102, 102, 255));
-        employeeInfoB.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        employeeInfoB.setForeground(new java.awt.Color(255, 255, 255));
-        employeeInfoB.setText("Employee Info");
-        employeeInfoB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                employeeInfoBActionPerformed(evt);
-            }
-        });
-        menuBar.add(employeeInfoB);
-        employeeInfoB.setBounds(240, 0, 130, 40);
 
         nameL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         nameL.setForeground(new java.awt.Color(255, 255, 255));
@@ -1320,26 +1308,47 @@ public class Home extends javax.swing.JFrame {
         menu2P.add(editDictL);
         editDictL.setBounds(0, 210, 170, 30);
 
-        customerDetailsL.setBackground(new java.awt.Color(0, 102, 255));
-        customerDetailsL.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
-        customerDetailsL.setForeground(new java.awt.Color(255, 255, 255));
-        customerDetailsL.setText("   Customer Details");
-        customerDetailsL.setFocusCycleRoot(true);
-        customerDetailsL.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        customerDetailsL.setOpaque(true);
-        customerDetailsL.addMouseListener(new java.awt.event.MouseAdapter() {
+        employeeInfoL.setBackground(new java.awt.Color(0, 102, 255));
+        employeeInfoL.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        employeeInfoL.setForeground(new java.awt.Color(255, 255, 255));
+        employeeInfoL.setText("   Employee Info");
+        employeeInfoL.setFocusCycleRoot(true);
+        employeeInfoL.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        employeeInfoL.setOpaque(true);
+        employeeInfoL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                customerDetailsLMouseClicked(evt);
+                employeeInfoLMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                customerDetailsLMouseEntered(evt);
+                employeeInfoLMouseEntered(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                customerDetailsLMousePressed(evt);
+                employeeInfoLMousePressed(evt);
             }
         });
-        menu2P.add(customerDetailsL);
-        customerDetailsL.setBounds(0, 260, 170, 30);
+        menu2P.add(employeeInfoL);
+        employeeInfoL.setBounds(0, 310, 170, 30);
+
+        customerDetailsL1.setBackground(new java.awt.Color(0, 102, 255));
+        customerDetailsL1.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        customerDetailsL1.setForeground(new java.awt.Color(255, 255, 255));
+        customerDetailsL1.setText("   Customer Details");
+        customerDetailsL1.setFocusCycleRoot(true);
+        customerDetailsL1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        customerDetailsL1.setOpaque(true);
+        customerDetailsL1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                customerDetailsL1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                customerDetailsL1MouseEntered(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                customerDetailsL1MousePressed(evt);
+            }
+        });
+        menu2P.add(customerDetailsL1);
+        customerDetailsL1.setBounds(0, 260, 170, 30);
 
         adminP.add(menu2P);
         menu2P.setBounds(0, 0, 170, 580);
@@ -1569,11 +1578,6 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void employeeInfoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeInfoBActionPerformed
-        c.show(baseP, "a");
-        c.show(adminBaseP, "e");
-    }//GEN-LAST:event_employeeInfoBActionPerformed
-
     private void loginBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBActionPerformed
 
         LoginDialog dialog = new LoginDialog(this, true);
@@ -1582,6 +1586,7 @@ public class Home extends javax.swing.JFrame {
         if (dialog.flag == 1) {
 
             loggedIn = true;
+            aboutUsB1.setVisible(false);
             homeB.setVisible(false);
             c.show(baseP, "a");
             loggedL.setVisible(true);
@@ -1589,7 +1594,6 @@ public class Home extends javax.swing.JFrame {
             nameL.setText("Manager");
             loginB.setVisible(false);
             accountL.setVisible(true);
-            employeeInfoB.setVisible(true);
             c.show(baseP, "a");
             c.show(adminBaseP, "e");
             gd.createConnection();
@@ -1692,7 +1696,8 @@ public class Home extends javax.swing.JFrame {
             loggedL.setVisible(false);
             nameL.setVisible(false);
             nameL.setText("");
-            employeeInfoB.setVisible(false);
+            homeB.setVisible(true);
+            aboutUsB1.setVisible(true);
             loginB.setVisible(true);
             accountL.setVisible(false);
         }
@@ -1917,17 +1922,17 @@ public class Home extends javax.swing.JFrame {
         scoreT.setEditable(true);
     }//GEN-LAST:event_scoreTFocusLost
 
-    private void customerDetailsLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsLMouseClicked
+    private void employeeInfoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeInfoLMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_customerDetailsLMouseClicked
+    }//GEN-LAST:event_employeeInfoLMouseClicked
 
-    private void customerDetailsLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsLMouseEntered
+    private void employeeInfoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeInfoLMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_customerDetailsLMouseEntered
+    }//GEN-LAST:event_employeeInfoLMouseEntered
 
-    private void customerDetailsLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsLMousePressed
-        c.show(adminBaseP, "c");
-    }//GEN-LAST:event_customerDetailsLMousePressed
+    private void employeeInfoLMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeInfoLMousePressed
+        c.show(adminBaseP, "e");
+    }//GEN-LAST:event_employeeInfoLMousePressed
 
     private void settingsCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsCBActionPerformed
         int k = settingsCB.getSelectedIndex();
@@ -2370,6 +2375,19 @@ public class Home extends javax.swing.JFrame {
         c.show(baseP, "abtus");
     }//GEN-LAST:event_aboutUsB1ActionPerformed
 
+    private void customerDetailsL1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsL1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_customerDetailsL1MouseClicked
+
+    private void customerDetailsL1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsL1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_customerDetailsL1MouseEntered
+
+    private void customerDetailsL1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsL1MousePressed
+        // TODO add your handling code here:
+        c.show(adminBaseP, "c");
+    }//GEN-LAST:event_customerDetailsL1MousePressed
+
     public static void main(String args[]) {
 
         try {
@@ -2416,7 +2434,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel custEL;
     private javax.swing.JPanel custEP;
     public javax.swing.JTable custET;
-    private javax.swing.JLabel customerDetailsL;
+    private javax.swing.JLabel customerDetailsL1;
     private javax.swing.JPanel customerP;
     private javax.swing.JTextField customerSearchTB;
     private javax.swing.JTextField customerSearchTB1;
@@ -2432,7 +2450,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JTextField empInfoSearchTB;
     public javax.swing.JTable empInfoT;
     private javax.swing.JPanel employeeBaseP;
-    private javax.swing.JButton employeeInfoB;
+    private javax.swing.JLabel employeeInfoL;
     private javax.swing.JPanel employeeInfoP;
     private javax.swing.JPanel employeeP;
     private javax.swing.JLabel headingL;
