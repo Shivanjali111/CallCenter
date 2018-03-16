@@ -64,6 +64,9 @@ public class Home extends javax.swing.JFrame {
         employeeBaseP.setLayout(c);
         employeeBaseP.add(custEP, "cemp");
         employeeBaseP.add(dictEP, "demp");
+        aboutUsBaseP.setLayout(c);
+        aboutUsBaseP.add(aboutUsInfoP,"info");
+        aboutUsBaseP.add(contactUs,"contachUs");
 
         TableFormatting();
 
@@ -357,11 +360,12 @@ public class Home extends javax.swing.JFrame {
         customerSearchTB1 = new javax.swing.JTextField();
         aboutUsP = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        aboutUsBaseP = new javax.swing.JPanel();
+        aboutUsInfoP = new javax.swing.JPanel();
+        scroll = new javax.swing.JScrollPane();
+        textAreaImage = new javax.swing.JTextArea();
+        imageL2 = new javax.swing.JLabel();
+        contactUs = new javax.swing.JPanel();
 
         popupMenu1.setLabel("popupMenu1");
 
@@ -406,7 +410,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuBar.add(loginB);
-        loginB.setBounds(240, 0, 130, 40);
+        loginB.setBounds(220, 0, 130, 40);
 
         nameL.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         nameL.setForeground(new java.awt.Color(255, 255, 255));
@@ -441,7 +445,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         menuBar.add(aboutUsB1);
-        aboutUsB1.setBounds(120, 0, 110, 40);
+        aboutUsB1.setBounds(110, 0, 110, 40);
 
         jPanel1.add(menuBar);
         menuBar.setBounds(0, 90, 1370, 40);
@@ -1540,31 +1544,43 @@ public class Home extends javax.swing.JFrame {
         aboutUsP.add(jLabel8);
         jLabel8.setBounds(0, 0, 1360, 50);
 
-        jPanel2.setBackground(new java.awt.Color(0, 204, 204));
-        jPanel2.setLayout(null);
+        aboutUsBaseP.setMinimumSize(new java.awt.Dimension(1360, 400));
+        aboutUsBaseP.setLayout(null);
 
-        jTextArea1.setBackground(new java.awt.Color(0, 204, 204));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jTextArea1.setRows(5);
-        jTextArea1.setText("\t         Description\n");
-        jScrollPane8.setViewportView(jTextArea1);
+        aboutUsInfoP.setMinimumSize(new java.awt.Dimension(1360, 400));
+        aboutUsInfoP.setLayout(null);
 
-        jPanel2.add(jScrollPane8);
-        jScrollPane8.setBounds(610, 40, 460, 440);
+        scroll.setBackground(new Color(0,0,10));
+        scroll.setBorder(null);
+        scroll.setEnabled(false);
+        scroll.setOpaque(false);
 
-        jTextArea2.setBackground(new java.awt.Color(0, 204, 204));
-        jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jTextArea2.setRows(5);
-        jTextArea2.setText("\t             Project By\n\n - Shivanjali Gaikwad\n - Simran Gulati\n - Pooja Choudhary\n - Trupti Dere\n\n\t          Guide \n - Prof.Muzaffar Shabad");
-        jScrollPane9.setViewportView(jTextArea2);
+        textAreaImage.setBackground(new Color(0,0,10));
+        textAreaImage.setColumns(20);
+        textAreaImage.setFont(new java.awt.Font("Times New Roman", 1, 17)); // NOI18N
+        textAreaImage.setForeground(new java.awt.Color(51, 51, 51));
+        textAreaImage.setRows(5);
+        textAreaImage.setText("We are a group of creative Developers here to help you - the\nCall Centers analyse the performance of your Employees.\nThis simple tool is developed for the Performance Analysis\nand Feedback.Rank your Employees according to their \naccomplishments ,get to know which Employee has \nperformed well, number of customers facing the issues, \nimprove the acquirements of Employees by giving them \nFeedback ,satisfy your customers and finally watch your \nBusiness grow!\nSatisfying Customers is every Company's goal - your's and \nour's as well!\nOur Vision is to develop a product which is not only the \nBest but also Legendary!\n \n");
+        textAreaImage.setOpaque(false);
+        scroll.setViewportView(textAreaImage);
 
-        jPanel2.add(jScrollPane9);
-        jScrollPane9.setBounds(16, 40, 460, 440);
+        aboutUsInfoP.add(scroll);
+        scroll.setBounds(20, 30, 480, 320);
 
-        aboutUsP.add(jPanel2);
-        jPanel2.setBounds(0, 70, 1410, 620);
+        imageL2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/about-us1.jpg"))); // NOI18N
+        aboutUsInfoP.add(imageL2);
+        imageL2.setBounds(0, 0, 1360, 400);
+
+        aboutUsBaseP.add(aboutUsInfoP);
+        aboutUsInfoP.setBounds(0, 0, 1360, 400);
+
+        contactUs.setMinimumSize(new java.awt.Dimension(1360, 400));
+        contactUs.setLayout(null);
+        aboutUsBaseP.add(contactUs);
+        contactUs.setBounds(0, 0, 1360, 400);
+
+        aboutUsP.add(aboutUsBaseP);
+        aboutUsBaseP.setBounds(0, 110, 1360, 400);
 
         baseP.add(aboutUsP);
         aboutUsP.setBounds(0, 0, 1360, 580);
@@ -2373,6 +2389,26 @@ public class Home extends javax.swing.JFrame {
     private void aboutUsB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutUsB1ActionPerformed
         // TODO add your handling code here:
         c.show(baseP, "abtus");
+        c.show(aboutUsBaseP, "info");
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+        scroll.setBorder(null);
+        scroll.setViewportBorder(null);
+        textAreaImage.setOpaque(false);
+        textAreaImage.setBorder(null);
+        textAreaImage.setBackground(new Color(0,0,0,10));
+        textAreaImage.setText("We are a group of creative Developers here to help you - the \nCall Centers analyse the performance of your Employees.\nThis simple tool is developed for the Performance Analysis\nand Feedback.Rank your Employees according to their\naccomplishments ,get to know which Employee has \nperformed well, number of customers facing the issues, \nimprove the acquirements of Employees by giving them \nFeedback ,satisfy your customers and finally watch your \nBusiness grow!\nSatisfying Customers is every Company's goal - your's and \nour's as well!\nOur Vision is to develop a product which is not only the \nBest but also Legendary!");
+       // textAreaImage.setText("");
+       textAreaImage.setEditable(false);
+//        scroll_contact.setOpaque(false);
+//        scroll_contact.getViewport().setOpaque(false);
+//        scroll_contact.setBorder(null);
+//        scroll_contact.setViewportBorder(null);
+//        textAreaContact.setOpaque(false);
+//        textAreaContact.setBorder(null);
+//        textAreaContact.setBackground(new Color(0,0,0,10));
+//        textAreaContact.setText("\t\t\t\t\t\tNeed to talk to us ?\n\t\t\t\t\t\tWe are listening and always ready to assist you!");
+//        textAreaContact.setEditable(false);
     }//GEN-LAST:event_aboutUsB1ActionPerformed
 
     private void customerDetailsL1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerDetailsL1MouseClicked
@@ -2421,6 +2457,8 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aboutUsB1;
+    private javax.swing.JPanel aboutUsBaseP;
+    private javax.swing.JPanel aboutUsInfoP;
     private javax.swing.JPanel aboutUsP;
     private javax.swing.JLabel accountL;
     private javax.swing.JPanel accountP;
@@ -2431,6 +2469,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel adminBaseP;
     private javax.swing.JPanel adminP;
     private javax.swing.JPanel baseP;
+    private javax.swing.JPanel contactUs;
     private javax.swing.JLabel custEL;
     private javax.swing.JPanel custEP;
     public javax.swing.JTable custET;
@@ -2462,6 +2501,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel homeP;
     private javax.swing.JLabel icon;
     private javax.swing.JLabel imageL;
+    private javax.swing.JLabel imageL2;
     private javax.swing.JLabel incomingRL;
     private javax.swing.JLabel individualRL;
     private javax.swing.JLabel jLabel1;
@@ -2475,7 +2515,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -2483,11 +2522,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel loggedL;
     private javax.swing.JButton loginB;
     private javax.swing.JLabel logoutL;
@@ -2512,6 +2547,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel reportsL;
     private javax.swing.JPanel reportsP;
     private javax.swing.JTextField scoreT;
+    private javax.swing.JScrollPane scroll;
     private javax.swing.JLabel searchL;
     private javax.swing.JLabel searchL2;
     private javax.swing.JLabel searchL3;
@@ -2524,6 +2560,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel settingsP;
     private javax.swing.JTextField settingsSearchTB;
     public javax.swing.JTable settingsT;
+    private javax.swing.JTextArea textAreaImage;
     private javax.swing.JButton updateDictB;
     private javax.swing.JButton updateEmpInfoB;
     private javax.swing.JButton updateSettB;
