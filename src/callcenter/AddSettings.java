@@ -1,15 +1,21 @@
 
 package callcenter;
 
+import java.sql.Connection;
+
 
 public class AddSettings extends javax.swing.JDialog {
 
     boolean added=false;
+    GetID getID;
+    Connection connection;
     
-    public AddSettings(java.awt.Frame parent, boolean modal) {
+    public AddSettings(java.awt.Frame parent, boolean modal, Connection connection) {
         super(parent, modal);
         initComponents();
         msgL.setVisible(false);
+        this.connection=connection;
+        getID=new GetID(connection);
     }
 
 
@@ -59,6 +65,7 @@ public class AddSettings extends javax.swing.JDialog {
         getContentPane().add(typeT);
         typeT.setBounds(90, 140, 160, 30);
 
+        idT.setEnabled(false);
         idT.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 idTFocusGained(evt);
@@ -100,13 +107,38 @@ public class AddSettings extends javax.swing.JDialog {
         msgL.setForeground(new java.awt.Color(255, 0, 0));
         msgL.setText("Please enter all the feilds");
         getContentPane().add(msgL);
-        msgL.setBounds(90, 180, 150, 23);
+        msgL.setBounds(90, 180, 150, 14);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void settingsCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsCBActionPerformed
-
+       String id;
+        switch (settingsCB.getSelectedIndex()) {
+            case 0:
+                idT.setText(null);
+                break;
+            case 1:
+                id=getID.getSettingsID("department", "dept_id", "DP");
+                idT.setText(id);
+                break;
+            case 2:
+                id=getID.getSettingsID("call_type", "type_id", "CT");
+                idT.setText(id);
+                break;
+            case 3:
+                id=getID.getSettingsID("category", "category_id", "CG");
+                idT.setText(id);
+                break;
+            case 4:
+                id=getID.getSettingsID("error_type", "error_id", "ER");
+                idT.setText(id);
+                break;
+            default:
+                break;
+        }
+            
+            
     }//GEN-LAST:event_settingsCBActionPerformed
 
     private void idTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTActionPerformed
@@ -128,11 +160,7 @@ public class AddSettings extends javax.swing.JDialog {
     }//GEN-LAST:event_resetBActionPerformed
 
     private void idTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_idTKeyPressed
-        char a=evt.getKeyChar();
-        if ((a >= '0' && a <= '9') || evt.getKeyCode()==8)
-            idT.setEditable(true);
-        else
-            idT.setEditable(false);
+
     }//GEN-LAST:event_idTKeyPressed
 
     private void idTFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_idTFocusGained
@@ -173,7 +201,7 @@ public class AddSettings extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddSettings dialog = new AddSettings(new javax.swing.JFrame(), true);
+                AddSettings dialog = new AddSettings(new javax.swing.JFrame(), true,null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

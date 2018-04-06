@@ -1,130 +1,168 @@
-
 package callcenter;
 
-//import com.sun.awt.AWTUtilities;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 public class LoginDialog extends javax.swing.JDialog {
 
     JFrame p;
-    String userID;
+    String userID,name;
     int flag;
+    Connection connection;
+    String username;
     public LoginDialog(JFrame parent, boolean modal) {
-       
+
         super(parent, modal);
         getContentPane().setBackground(Color.WHITE);
-//        setUndecorated(true); // remove system frame
-//        AWTUtilities.setWindowOpaque(this, false);
-//        SwingUtils.createDialogBackPanel(this, parent.getContentPane());
-        p=parent;
+        p = parent;
         initComponents();
-
+        this.getRootPane().setDefaultButton(loginSubmitB);
+        this.setTitle("Login");
+        loginmsgL.setVisible(false);
+        
     }
 
+    public void validateUser() {
+        GetData getdata = new GetData();
+        String password = passwordT.getText();
+         username = userIDT.getText();
+        boolean flag1 = false;
+        getdata.createConnection();
+        connection = getdata.getConnection();
+        String query = "select * from user_details ";
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                String actual_username = rs.getString("username");
+                String actual_password = rs.getString("password");
+                String post = rs.getString("post");
+                if ((password.equals(actual_password)) && (username.equals(actual_username))) {
+                    flag1 = true;
+                    if ("manager".equalsIgnoreCase(post)) {
+                        flag = 1;
+                        userID=rs.getString("employee_id");
+                        dispose();
+                    } else if ("employee".equalsIgnoreCase(post)) {
+                        flag = 2;
+                        userID=rs.getString("employee_id");
+                        dispose();
+                    } else {
+                        flag = 0;
+                    }
+                    ResultSet rs1=st.executeQuery("select first_name, last_name from employee where employee_id='"+userID+"'");
+                    while(rs1.next()){
+                        name=rs1.getString("first_name")+" "+rs1.getString("last_name");
+                    }
+                    break;
+                }
+            }
+            if (flag1 == false) {
+                loginmsgL.setText("Invalid username password!");
+                loginmsgL.setVisible(true);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        userID_T = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        userIDT = new javax.swing.JTextField();
+        loginSubmitB = new javax.swing.JButton();
+        resetB = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        password_T = new javax.swing.JPasswordField();
+        passwordT = new javax.swing.JPasswordField();
+        loginmsgL = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(300, 230));
+        setMinimumSize(new java.awt.Dimension(300, 230));
+        setPreferredSize(new java.awt.Dimension(300, 230));
+        getContentPane().setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 102, 255));
         jLabel2.setText("User ID");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(30, 20, 49, 31);
 
-        userID_T.addActionListener(new java.awt.event.ActionListener() {
+        userIDT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userID_TActionPerformed(evt);
+                userIDTActionPerformed(evt);
             }
         });
+        getContentPane().add(userIDT);
+        userIDT.setBounds(100, 20, 150, 31);
 
-        jButton1.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jButton1.setText("Submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loginSubmitB.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        loginSubmitB.setText("Submit");
+        loginSubmitB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loginSubmitBActionPerformed(evt);
             }
         });
+        getContentPane().add(loginSubmitB);
+        loginSubmitB.setBounds(50, 130, 71, 23);
 
-        jButton2.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jButton2.setText("Reset");
+        resetB.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        resetB.setText("Reset");
+        resetB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBActionPerformed(evt);
+            }
+        });
+        getContentPane().add(resetB);
+        resetB.setBounds(140, 130, 77, 23);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 102, 255));
         jLabel3.setText("Password");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(30, 70, 65, 31);
+        getContentPane().add(passwordT);
+        passwordT.setBounds(100, 70, 149, 31);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(userID_T, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(password_T))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(userID_T))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(password_T, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(41, Short.MAX_VALUE))
-        );
+        loginmsgL.setFont(new java.awt.Font("Times New Roman", 1, 11)); // NOI18N
+        loginmsgL.setForeground(new java.awt.Color(255, 51, 51));
+        loginmsgL.setText("Please enter all the fields");
+        getContentPane().add(loginmsgL);
+        loginmsgL.setBounds(60, 110, 160, 13);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void userID_TActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userID_TActionPerformed
+    private void userIDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userIDTActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_userID_TActionPerformed
+    }//GEN-LAST:event_userIDTActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if("123".equals(password_T.getText()) && "manager".equals(userID_T.getText())){
-            flag=1;
-            dispose();
+    private void loginSubmitBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginSubmitBActionPerformed
+        
+        if ("".equals(userIDT.getText()) || "".equals(passwordT.getText())) {
+            loginmsgL.setText("Please enter all the fields");
+            loginmsgL.setVisible(true);
+        } else {
+            validateUser();
         }
-        else if("321".equals(password_T.getText()) && "employee".equals(userID_T.getText())){
-            flag=2;
-            dispose();
-        }
-        else{
-            flag=0;
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_loginSubmitBActionPerformed
+
+    private void resetBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBActionPerformed
+        userIDT.setText("");
+        passwordT.setText("");
+        loginmsgL.setText("");
+    }//GEN-LAST:event_resetBActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,6 +193,10 @@ public class LoginDialog extends javax.swing.JDialog {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -172,11 +214,12 @@ public class LoginDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPasswordField password_T;
-    private javax.swing.JTextField userID_T;
+    private javax.swing.JButton loginSubmitB;
+    private javax.swing.JLabel loginmsgL;
+    private javax.swing.JPasswordField passwordT;
+    private javax.swing.JButton resetB;
+    private javax.swing.JTextField userIDT;
     // End of variables declaration//GEN-END:variables
 }
