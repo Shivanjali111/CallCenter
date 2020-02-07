@@ -28,6 +28,7 @@ public class RemoveCustomer extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+	//Commit 3 test
     private void initComponents() {
 
         jTextField2 = new javax.swing.JTextField();
