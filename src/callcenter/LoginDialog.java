@@ -107,6 +107,7 @@ public class LoginDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+	//commit 2 testing
 
     private void userID_TActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userID_TActionPerformed
         // TODO add your handling code here:

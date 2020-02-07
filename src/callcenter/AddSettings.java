@@ -15,6 +15,7 @@ public class AddSettings extends javax.swing.JDialog {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+	// commit 2 Testing
     private void initComponents() {
 
         settingsCB = new javax.swing.JComboBox<>();
