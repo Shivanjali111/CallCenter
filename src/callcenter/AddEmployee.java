@@ -22,6 +22,7 @@ public class AddEmployee extends javax.swing.JDialog {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+	// Testing -- commit 1
     private void initComponents() {
 
         jToggleButton1 = new javax.swing.JToggleButton();
