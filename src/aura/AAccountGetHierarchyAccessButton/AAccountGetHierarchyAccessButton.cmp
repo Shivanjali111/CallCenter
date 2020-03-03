@@ -1,0 +1,8 @@
+<aura:component implements="force:lightningQuickAction,force:hasRecordId" controller="LightningUtilController">
+	<!-- Execute a function on the page load -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Utility or Service components -->
+    <c:SpinnerUtility aura:id="spinnerUtility" />
+    <c:GenericUtility aura:id="genericUtility" />
+</aura:component>
