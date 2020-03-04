@@ -1,6 +1,6 @@
 ({
 	/*
-	 * Initialize the component===
+	 * Initialize the component=======
 	 */
 	doInit: function(component, event, helper) {
 		var genericUtility = component.find('genericUtility');

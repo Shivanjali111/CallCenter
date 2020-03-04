@@ -1,0 +1,117 @@
+<aura:component 
+	implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" 
+	access="global"
+	controller="LightningUtilController">
+	
+	<!-- Task -->
+	<!-- Loaded from c:RecordTypePicklistValues component -->
+	<aura:attribute name="taskRecordTypePicklistValues" type="Object" />
+	<!-- Store the task record types -->
+	<aura:attribute name="taskRecordTypes" type="Array" />
+	<!-- Flag to check New Task modal-->
+	<aura:attribute name="isTaskModalOpen" type="Boolean" default="false" />
+	<!-- Store the selected task record type -->
+	<aura:attribute name="selectedTaskRecordType" type="Map" />
+	<!-- Store the type of the task newTask or logCall -->
+	<aura:attribute name="taskOption" type="String" />
+
+	<!-- Event -->
+	<!-- Loaded from c:RecordTypePicklistValues component -->
+	<aura:attribute name="eventRecordTypePicklistValues" type="Object" />
+	<!-- Store the event record types -->
+	<aura:attribute name="eventRecordTypes" type="Array" />
+    <!-- Flag to check New Event modal-->
+	<aura:attribute name="isEventModalOpen" type="Boolean" default="false" />
+    <!-- Store the selected event record type -->
+	<aura:attribute name="selectedEventRecordType" type="Map" />
+
+	<!-- Utility or Service components -->
+	<c:GenericUtility aura:id="genericUtility" />
+	<c:RecordTypePicklistValues sObjectType="{ 'sobjectType' : 'Task' }" picklistValues="{!v.taskRecordTypePicklistValues}" />
+	<c:RecordTypePicklistValues sObjectType="{ 'sobjectType' : 'Event' }" picklistValues="{!v.eventRecordTypePicklistValues}" />
+
+	<div class="actions-container">
+		<div class="slds-button-group" role="group">
+			<button class="slds-button slds-button_neutral" data-task-option="newTask" onclick="{!c.taskRecordTypeSelectionModal}">New Task</button>
+			<button class="slds-button slds-button_neutral" onclick="{!c.eventRecordTypeSelectionModal}">New Event</button>
+			<button class="slds-button slds-button_neutral" data-task-option="logCall" onclick="{!c.taskRecordTypeSelectionModal}">Log a Call</button>
+            <button class="slds-button slds-button_neutral" onclick="{!c.openNonMktngActivity}">Non-Mktng Activities</button>
+		</div>
+	</div>
+
+	<!-- Task record type modal starts -->
+	<aura:if isTrue="{!v.isTaskModalOpen}">
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" data-param="v.isTaskModalOpen" onclick="{!c.closeModal}">
+						<lightning:icon iconName="utility:close" size="small" variant="inverse" alternativeText="Close" />
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 class="slds-text-heading_medium slds-hyphenate">New Task</h2>
+				</header>
+
+				<div class="slds-modal__content slds-p-around_medium">
+					<div class="slds-form slds-form_horizontal">
+						<div class="slds-form-element">
+							<lightning:radioGroup 
+								aura:id="taskRecordTypesRadio"
+								name="taskRecordTypesRadio"
+								label="Select Record Type"
+								options="{!v.taskRecordTypes}"
+								value="{!v.selectedTaskRecordType}"
+								onchange="{!c.changeTaskRecordType}"
+								required="true" />
+						</div>
+					</div>
+				</div>
+
+				<footer class="slds-modal__footer">
+					<button class="slds-button slds-button_neutral" data-param="v.isTaskModalOpen" onclick="{!c.closeModal}">Cancel</button>
+					<button class="slds-button slds-button_brand" onclick="{!c.createTask}">Next</button>
+				</footer>
+			</div>
+		</section>
+
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</aura:if>
+	<!-- Task record type modal ends -->
+    
+    <!-- Event record type modal starts -->
+	<aura:if isTrue="{!v.isEventModalOpen}">
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" data-param="v.isEventModalOpen" onclick="{!c.closeModal}">
+						<lightning:icon iconName="utility:close" size="small" variant="inverse" alternativeText="Close" />
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 class="slds-text-heading_medium slds-hyphenate">New Task</h2>
+				</header>
+
+				<div class="slds-modal__content slds-p-around_medium">
+					<div class="slds-form slds-form_horizontal">
+						<div class="slds-form-element">
+							<lightning:radioGroup 
+								aura:id="eventRecordTypesRadio"
+								name="eventRecordTypesRadio"
+								label="Select Record Type"
+								options="{!v.eventRecordTypes}"
+								value="{!v.selectedEventRecordType}"
+								onchange="{!c.changeEventRecordType}"
+								required="true" />
+						</div>
+					</div>
+				</div>
+
+				<footer class="slds-modal__footer">
+					<button class="slds-button slds-button_neutral" data-param="v.isEventModalOpen" onclick="{!c.closeModal}">Cancel</button>
+					<button class="slds-button slds-button_brand" onclick="{!c.createEvent}">Next</button>
+				</footer>
+			</div>
+		</section>
+
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</aura:if>
+	<!-- Event record type modal ends -->
+</aura:component>

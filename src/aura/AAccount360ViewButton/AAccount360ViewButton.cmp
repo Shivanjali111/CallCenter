@@ -1,5 +1,5 @@
 <aura:component implements="force:lightningQuickAction,force:hasRecordId" controller="LightningUtilController">
-    <!-- Event handler to initialize the component -->
+    <!-- Event handler to initialize the component===== -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!-- Utility or Service components -->
