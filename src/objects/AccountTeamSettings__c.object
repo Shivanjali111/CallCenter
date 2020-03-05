@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>Manages permissions around Account Team/Sales Team. Also hold override for Opportunity creation. 
+Updated per: https://na4.salesforce.com/a1W60000000Cg5D</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>AccountAccess__c</fullName>
+        <defaultValue>&apos;Edit&apos;</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Values:
+&apos;Edit&apos;
+&apos;Read&apos;</inlineHelpText>
+        <label>AccountAccess</label>
+        <length>255</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AccountTeamEditLockOut__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>AccountTeamEditLockOut</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AddSalesTeam__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Add Sales Team Members</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Add_Members__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Add Members</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CaseAccess__c</fullName>
+        <defaultValue>&apos;None&apos;</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Values:
+&apos;None&apos;
+&apos;Read&apos;</inlineHelpText>
+        <label>CaseAccess</label>
+        <length>255</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CreateOpportunityOverride__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Can create an Opportunity even if not on Account Team</inlineHelpText>
+        <label>CreateOpportunityOverride</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Default_Transfer_Comments__c</fullName>
+        <externalId>false</externalId>
+        <label>Default Transfer Comments</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Default_Transfer_Reason__c</fullName>
+        <externalId>false</externalId>
+        <label>Default Transfer Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EditAllSalesTeam__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Edit All Sales Team</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Edit_All__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Edit All</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>OpportunityAccess__c</fullName>
+        <defaultValue>&apos;Read&apos;</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Values:
+&apos;None&apos;
+&apos;Read&apos;</inlineHelpText>
+        <label>OpportunityAccess</label>
+        <length>255</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>OpportunityLockDownOverride__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Allows user to override the Opportunity Lock Down and edit Opp fields.</inlineHelpText>
+        <label>OpportunityLockDownOverride</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>Account Team Settings</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>SETUP_OWNER_NAME</columns>
+        <columns>SETUP_TYPE</columns>
+        <columns>NAME</columns>
+        <columns>Add_Members__c</columns>
+        <columns>Edit_All__c</columns>
+        <columns>EditAllSalesTeam__c</columns>
+        <columns>AddSalesTeam__c</columns>
+        <columns>CreateOpportunityOverride__c</columns>
+        <columns>AccountTeamEditLockOut__c</columns>
+        <columns>OpportunityLockDownOverride__c</columns>
+        <columns>AccountAccess__c</columns>
+        <columns>OpportunityAccess__c</columns>
+        <columns>CaseAccess__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>UPDATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Profiles</fullName>
+        <columns>SETUP_OWNER_NAME</columns>
+        <columns>Add_Members__c</columns>
+        <columns>Edit_All__c</columns>
+        <columns>EditAllSalesTeam__c</columns>
+        <columns>AddSalesTeam__c</columns>
+        <columns>CreateOpportunityOverride__c</columns>
+        <columns>AccountTeamEditLockOut__c</columns>
+        <columns>OpportunityLockDownOverride__c</columns>
+        <columns>AccountAccess__c</columns>
+        <columns>OpportunityAccess__c</columns>
+        <columns>CaseAccess__c</columns>
+        <columns>Default_Transfer_Comments__c</columns>
+        <columns>Default_Transfer_Reason__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>UPDATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>SETUP_TYPE</field>
+            <operation>equals</operation>
+            <value>Profile</value>
+        </filters>
+        <label>Profiles</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Users</fullName>
+        <columns>SETUP_OWNER_NAME</columns>
+        <columns>Add_Members__c</columns>
+        <columns>Edit_All__c</columns>
+        <columns>EditAllSalesTeam__c</columns>
+        <columns>AddSalesTeam__c</columns>
+        <columns>CreateOpportunityOverride__c</columns>
+        <columns>AccountTeamEditLockOut__c</columns>
+        <columns>OpportunityLockDownOverride__c</columns>
+        <columns>AccountAccess__c</columns>
+        <columns>OpportunityAccess__c</columns>
+        <columns>CaseAccess__c</columns>
+        <columns>Default_Transfer_Comments__c</columns>
+        <columns>Default_Transfer_Reason__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>UPDATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>SETUP_TYPE</field>
+            <operation>equals</operation>
+            <value>User</value>
+        </filters>
+        <label>Users</label>
+        <language>en_US</language>
+    </listViews>
+    <visibility>Protected</visibility>
+</CustomObject>

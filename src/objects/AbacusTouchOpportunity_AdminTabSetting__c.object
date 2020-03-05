@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>AdminTabView__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>ABACUS - True If Admin Tab should view in Abacus Touch Opportunity View</description>
+        <externalId>false</externalId>
+        <inlineHelpText>True If Admin Tab should view in Abacus Touch Opportunity View</inlineHelpText>
+        <label>AdminTabView</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>AbacusTouchOpportunity_AdminTabSetting</label>
+    <visibility>Protected</visibility>
+</CustomObject>

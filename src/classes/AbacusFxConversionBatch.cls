@@ -1,5 +1,5 @@
 /*
-* Cognizant : 21/11/2013==
+* Cognizant : 21/11/2013
 * AbacusFxConversionBatch: Updates Conversion Ration on Corp Bookings based on Opportunity Currecny ISO code, 
 *                          and Corp Booking Close Date
 * Change log: 10/4/2015: Changes Added by VCHOUHAN for Infinity Enhancements for storing Plan Fx Rate on Opportunity
