@@ -11083,7 +11083,7 @@ IMAGE(&quot;/resource/einstein_up&quot;,&quot;Click for Assistance&quot;),
         <fullName>SBQQ__PreserveBundle__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>Select to maintain bundle hierarchy on renewal quotes and amendments</description>
+        <description>Select to maintain bundle hierarchy on renewal quotes and amendments 2</description>
         <externalId>false</externalId>
         <inlineHelpText>Select checkbox to maintain bundle hierarchy on renewal quotes and amendments.</inlineHelpText>
         <label>Preserve Bundle Structure</label>

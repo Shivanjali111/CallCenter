@@ -3,7 +3,7 @@
 *   @Contains all triggering events pertaining to the Account Object
 *   @NKamadolli - 13 September 2013 - Territory Planning 2014
 *   @Saakshi - 6 April 2016 - SRD7: GSA/SEWP Pricing - Added updateGSASEWPQuotes method in after update call
-*   @Weronika -  22 June 2016 - Added method updateLoosingInsights as per 05564346.
+*   @Weronika -  22 June 2016 - Added method updateLoosingInsights as per 05564346.===
 *   @Aieleeta - 22 June 2016 -  Added 'after delete' in the list of trigger events. Also added  !Trigger.isDelete to the method createAccountTeam
 *   @Hkwan - Added new Anchorage triggers, submitForPaymentTermsApproval and updateCreditFields
 *   @Sid - 10/18/2017- Added New trigger for createHistory method

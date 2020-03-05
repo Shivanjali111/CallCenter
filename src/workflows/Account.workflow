@@ -18,7 +18,7 @@
     </alerts>
     <alerts>
         <fullName>Create_Case_when_LSS_Hold_Over_Expiration_Today</fullName>
-        <ccEmails>sobjectdml@w-271frd1hgyli60aph3cm9l921456j99xlcrkompqibvmj58ps6.3-1xrieae.na4.apex.salesforce.com</ccEmails>
+        <ccEmails>sobjectdml@w-271frd1hgyli60aph3cm9l921456j99xlcrkompqibvmj58ps6.3-1xrieae.na6.apex.salesforce.com</ccEmails>
         <description>Create Case when LSS Hold Over Expiration &lt; Today</description>
         <protected>false</protected>
         <senderType>CurrentUser</senderType>

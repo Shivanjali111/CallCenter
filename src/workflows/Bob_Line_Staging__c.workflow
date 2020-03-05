@@ -18,7 +18,7 @@
         </actions>
         <active>true</active>
         <description>This workflow stamps Unique Key on Bob Line Staging record.</description>
-        <formula>ISNEW() || ISCHANGED(Business_Unit__c) || ISCHANGED(Account__c) || ISCHANGED(Status__c)</formula>
+        <formula>ISNEW() || ISCHANGED(Business_Unit__c)  || ISCHANGED(Status__c)</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
 </Workflow>

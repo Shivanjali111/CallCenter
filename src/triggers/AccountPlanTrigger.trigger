@@ -1,6 +1,6 @@
 /*
 * Vanaj Nayak - 21 Feb 2018
-* case #09346536 - Customer objective char count to help RM reps
+* case #09346536 - Customer objective char count to help RM reps===
 * @Neel - 22 Aug 2018 - Jira ORBIT-3364: Create integration log on account plan create event.
 * @Neel - 03 Oct 2018 - Jira ORBIT-3676: Lock Down Account Plan for Ramped RM.
 * @Sonal - 22 March 2019 - Restrict CCP Creation if a CCP already exists on an account except for Sys Admin Profiles as per Case 12532096.
