@@ -1,0 +1,499 @@
+<apex:page docType="html-5.0" showheader="false" applyBodyTag="false" standardController="Opportunity" sidebar="false" extensions="AbacusViewController" title="Deal Wizard - {!Opportunity.name}" standardStylesheets="true">
+    <html lang="en">
+        <head>
+            <script language="javascript" src="/soap/ajax/27.0/connection.js" type="text/javascript"></script>
+            <script language="javascript" src="/soap/ajax/15.0/apex.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+            <apex:stylesheet value="{!URLFOR($Resource.DealWizard, 'styles/plugin/jquery-ui.css')}" />
+            <link rel="stylesheet" media="screen" href="/apex/AV_app_css" />
+            <apex:includescript value="{!$Resource.AnalyticsUtil}" />
+            <apex:stylesheet value="{!URLFOR($Resource.LMSDealWizard, 'styles/reset.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.LMSDealWizard, 'styles/hopscotch.min.css')}"/>_P_mxZu5J%Vw_c5z
+
+            <apex:stylesheet value="{!URLFOR($Resource.LMSDealWizard, 'styles/master.css')}" />
+            <title>Abacus - {!Opportunity.name}</title>
+        </head>
+        <body>
+            <div id="messageCenter" style="display:none;">
+                <a href="#" class="close">
+                    <img src="{!URLFOR($Resource.dealwizard, 'img/icons/crosscircle16x16.png')}" title="Close this notification" alt="close" />
+                </a>
+                <div class="messageCenterMsg"></div>
+            </div>
+            <apex:outputPanel >
+                <div class="container body-content">
+                    <div class="row">
+                        <div class="col-xs-12 full-container">
+                            <header class="row header text-center">
+                                <nav class="navbar navbar-default">
+                                    <div class="container-fluid main-nav">
+                                        <div class="navbar-header">
+                                            <!--a class="navbar-brand" href="javascript:void(0);">Abacus-LowTouch View</a>-->
+                                            <div class="logo">
+                                                <a href="">
+                                                    <apex:image value="{!URLFOR($Resource.LMSDealWizard, 'img/logo-dw.png')}" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="view-search">
+                                            <input type="text" class="oppty-search" placeholder="Search my open opportunities" />
+                                        </div>
+                                        <div class="dwTopContainerRight">
+                                            <div class="dwTopContainerRightLink">
+                                                <a class="emc2" href="/apex/EinsteinRouting?recordId={!Opportunity.id}&origin=opportunity" target="_blank"></a>
+                                            </div>
+                                            <div class="dwTopContainerRightLink">
+                                                <a class="hlep" href="{!$Label.Deal_Wizard_Help_Link}" target="_blank">Help</a>
+                                            </div>
+                                            <div class="dwTopContainerRightLink">
+                                                <a id="startTour" style="display: inline-block;margin-top: 3px;" href="javascript:void(0);">Start Tour</a>
+                                            </div>
+                                            <div class="dwTopContainerRightLink noBorder">
+                                                <span>
+                                                    <a href="{!$Label.SFDC_Server_URL}home/home.jsp" class="sdfchome" target="_blank" title="" >Salesforce Home</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </header>
+                            <div class="row oppty-header">
+                                <div class="dwHeadingText">
+                                    <!--<span class="header-lbl">Opportunity</span>-->
+                                    <i></i>
+                                    <h3>
+                                        <apex:outputText value="{!Opportunity.name}"/>
+                                    </h3>
+                                    <div class="fright engageHeadColor">
+                                        <h2>
+                                            <apex:outputText value="{!opportunityObj.Stagename}"/>
+                                            <apex:outputText styleClass="stageProbability" value="{!opportunityObj.Probability}%"/>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <apex:form id="opptyEditForm">
+                                <apex:pageMessage id="noAccessNotification" rendered="{!NOT(Opportunity.UserRecordAccess.HasEditAccess)}" severity="error" summary="You do not have edit access on this opportunity." strength="2" />
+                                <apex:pageMessages escape="false"/>
+                                <!--<apex:outputPanel styleClass="row text-center" layout="block" rendered="{!AND(NOT(Opportunity.IsClosed),Opportunity.UserRecordAccess.HasEditAccess)}">
+                                   <div class="account-center">
+                                        <span class='account-center-info'>Build your quote using LinkedIn Corporate Account Center
+                                        </span>
+                                   </div>
+                                </apex:outputPanel>-->
+                                <div class="row view-actions">
+                                    <div class="text-left">
+                                        <apex:commandButton id="save" status="overlayStatus" action="{!save}" value="Save" styleClass="btn btn-primary btn-sm save-oppty" rendered="{!AND(isEdit,NOT(Opportunity.IsClosed),Opportunity.UserRecordAccess.HasEditAccess)}" />
+                                        <apex:commandButton id="QuickSaveButton" status="overlayStatus" action="{!quickSave}" value="Quick Save" styleClass="btn btn-primary btn-sm quick-save" rendered="{!AND(isEdit,NOT(Opportunity.IsClosed),Opportunity.UserRecordAccess.HasEditAccess)}" />
+                                        <apex:commandButton id="btnCancel" status="overlayStatus" action="{!doCancel}" value="Cancel" styleClass="btn btn-primary btn-sm cancel-edit" rendered="{!isEdit}" immediate="true" />
+                                        <apex:commandButton id="Edit" status="overlayStatus" action="{!doEdit}" value="Edit" styleClass="btn btn-primary btn-sm edit-oppty" rendered="{!AND(NOT(isEdit),NOT(Opportunity.IsClosed),Opportunity.UserRecordAccess.HasEditAccess)}" />
+                                        <c:AccountCenterComponent />
+                                        <apex:outputPanel rendered="{!IF(CONTAINS($Label.Abacus_Super_Admin_Profiles,LEFT($Profile.Id, 15)),true,IF(AND(Opportunity.IsClosed, Opportunity.IsWon, CONTAINS($Label.Abacus_Limited_Admin_Profiles,LEFT($Profile.Id, 15))), true, false))}"> <a class="admin-view" href="/{!Opportunity.id}{!$Label.OpportunityViewOverride_PostFix}" target="_blank">Open Admin View</a> </apex:outputPanel>
+                                    </div>
+                                </div>
+                                <div class="row view-info">
+                                     
+                                    <div class="text-center">
+                                        <apex:outputPanel >
+                                            <apex:pageBlock id="ViewSection">
+                                                <!--<label>Opportunity Details</label>-->
+                                                <div class="summary-section">
+                                                    <div class="text-left"><h5 class="text-left summary-lbl">Opportunity Details</h5></div>
+                                                    <apex:pageblocksection id="oppty_summary" columns="2">
+                                                        <apex:repeat value="{!$ObjectType.Opportunity.FieldSets['CAC_Summary_Opportunity_Fields']}" var="eachField">
+                                                            <apex:inputField value="{!opportunityObj[eachField.fieldPath]}" rendered="{!AND( NOT(opportunityObj.isClosed),isEdit)}" onchange="AV_global.field_changed = true"/>
+                                                            <apex:outputField value="{!opportunityObj[eachField.fieldPath]}" rendered="{!OR ( opportunityObj.isClosed , NOT(isEdit))}" />
+                                                        </apex:repeat>
+                                                    </apex:pageblocksection>
+                                                </div>   
+                                                <div class="summary-section"> 
+                                                    <div class="text-left"><h5 class="text-left summary-lbl">Forecasting</h5></div>
+                                                    <apex:pageblocksection id="forecasting_summary" columns="2">
+                                                        <apex:repeat value="{!$ObjectType.Opportunity.FieldSets['CAC_Summary_Forecasting_Fields']}" var="eachField">
+                                                            <apex:inputField value="{!opportunityObj[eachField.fieldPath]}" rendered="{!AND(eachField.fieldPath=='StageName', NOT(opportunityObj.isClosed), isEdit)}" styleClass="{!eachField.fieldPath}" >
+                                                                <apex:actionSupport event="onchange" onsubmit="AV_app.disable_save(); AV_global.field_changed = true;" oncomplete="AV_app.update_probability();" reRender="ClosedDisEngaged" />
+                                                            </apex:inputField>
+                                                            <apex:inputField value="{!opportunityObj[eachField.fieldPath]}" rendered="{!AND(eachField.fieldPath!='StageName', NOT(opportunityObj.isClosed), isEdit)}" styleClass="{!eachField.fieldPath}" onchange="AV_global.field_changed = true"/>
+                                                            <apex:outputField value="{!opportunityObj[eachField.fieldPath]}" rendered="{!OR (opportunityObj.isClosed, NOT(isEdit))}" />
+                                                        </apex:repeat>
+                                                    </apex:pageblocksection>
+                                                    <!-- Cause_for_Loss__c & Cause_for_Loss_Details__c are LTS only and shown when stage is Closed Disengaged - START -->
+                                                    <apex:pageblocksection id="ClosedDisEngaged">
+                                                        <apex:inputField id="ipCause" value="{!opportunityObj.Cause_for_Loss__c}" rendered="{!AND(businessUnit=='LTS',opportunityObj.StageName=='Closed Disengaged', isEdit)}" styleClass="Cause_for_Loss__c" onchange="AV_global.field_changed = true"/>
+                                                        <apex:inputField id="ipDowngrade" value="{!opportunityObj.Cause_for_Loss_Details__c}" rendered="{!AND(businessUnit=='LTS',opportunityObj.StageName=='Closed Disengaged', isEdit)}" styleClass="Cause_for_Loss_Details__c" onchange="AV_global.field_changed = true"/>
+                                                        <apex:outputField id="opCause" value="{!opportunityObj.Cause_for_Loss__c}" rendered="{!AND(businessUnit=='LTS',opportunityObj.StageName=='Closed Disengaged', NOT(isEdit))}" styleClass="Cause_for_Loss__c" />
+                                                        <apex:outputField id="opDowngrade" value="{!opportunityObj.Cause_for_Loss_Details__c}" rendered="{!AND(businessUnit=='LTS',opportunityObj.StageName=='Closed Disengaged', NOT(isEdit))}" styleClass="Cause_for_Loss_Details__c" />
+                                                    </apex:pageblocksection>
+                                                    <!-- Cause_for_Loss__c & Cause_for_Loss_Details__c are LTS only and shown when stage is Closed Disengaged - END -->
+                                                </div>       
+                                            </apex:pageBlock>
+                                        </apex:outputPanel>
+                                    </div>
+                                </div>
+                            </apex:form>
+                            <div class="row view-linkedin-way-stages">
+                                <span class="lin-way-lbl"> LinkedIn Way Progress</span>
+                                <apex:outputPanel >
+                                    <c:FieldImageComponent objName="Opportunity" field_Name="LinkedIn_Way__c" field_Value="{!opportunityObj.LinkedIn_Way__c}" />
+                                </apex:outputPanel>
+                            </div>                        
+                            <div class="row related-info" >
+                                <div class="col-md-8 main-bar">
+                                    <div class="related-list">
+                                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                                            <li role="presentation" class="active">
+                                                <a href="javascript:void(0);" data-target="#chatter" aria-controls="chatter" role="tab" data-toggle="tab">Chatter</a>
+                                            </li>                                        
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a>
+                                            </li>                                       
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#notes_attachments" aria-controls="notes_attachments" role="tab" data-toggle="tab">Attachments</a>
+                                            </li>
+                                            
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#contact_roles" aria-controls="contact_roles" role="tab" data-toggle="tab">Contacts</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#approval_history" aria-controls="approval_history" role="tab" data-toggle="tab">Approvals</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#case" aria-controls="case" role="tab" data-toggle="tab">Cases</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#opportunity_team" aria-controls="opportunity_team" role="tab" data-toggle="tab">Team</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="javascript:void(0);" data-target="#all_products" aria-controls="all_products" role="tab" data-toggle="tab">Products</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content clearfix">
+                                            <div role="tabpanel" class="tab-pane active" id="chatter">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:iframe id="chatter_frame" width="100%" src="/apex/OpportunityChatterFeed?id={!Opportunity.Id}" frameborder="0" scrolling="true"/>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="details">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:form >
+                                                        <apex:pageBlock >
+                                                            <apex:outputPanel >
+                                                                <apex:pageblocksection columns="2">
+                                                                    <apex:repeat value="{!$ObjectType.Opportunity.FieldSets['CAC_Deal_Details_Fields']}" var="eachField">
+                                                                        <apex:outputField value="{!opportunityObj[eachField.fieldPath]}" />
+                                                                    </apex:repeat>
+                                                                </apex:pageblocksection>
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlock>
+                                                    </apex:form>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="activity">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:relatedList rendered="{!NOT(isEdit)}" list="OpenActivities" />
+                                                    <apex:relatedList rendered="{!isEdit}" list="OpenActivities" >
+                                                        <apex:facet name="header" >&nbsp;</apex:facet>
+                                                    </apex:relatedList>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="approval_history">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:relatedList rendered="{!NOT(isEdit)}" list="ProcessSteps" />
+                                                    <apex:relatedList rendered="{!isEdit}" list="ProcessSteps" >
+                                                        <apex:facet name="header" >&nbsp;</apex:facet>
+                                                    </apex:relatedList>
+                                                </div>
+                                            </div>
+                                            
+                                            <div role="tabpanel" class="tab-pane" id="notes_attachments">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:relatedList rendered="{!NOT(isEdit)}" list="CombinedAttachments" />
+                                                    <apex:relatedList rendered="{!isEdit}" list="CombinedAttachments" >
+                                                        <apex:facet name="header" >&nbsp;</apex:facet>
+                                                    </apex:relatedList>
+                                                </div>
+                                            </div>
+                                            
+                                            <div role="tabpanel" class="tab-pane" id="contact_roles">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:outputPanel rendered="{!NOT(isEdit)}" styleClass="tab_links">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{!$Label.DWLMS_Futurama}" target="_blank" title="Futurama"><img class="noHeadToggle" src="{!URLFOR($Resource.DealWizard, 'img/futurama.png')}" width="20" />&nbsp;&nbsp;Futurama LookUp</a>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <a href="javascript:void(0);" onclick="AV_app.quick_action('uiDialog',['#dialog-CreateCaseForm', 'Contact Role - {!opportunityObj.name}', 500, 655, '/apex/DWLMS_QuickCreateOptyConRole_VP?oppid={!opportunityObj.Id}', false, '100%', '100%', true],true)">New Contact Role</a>
+                                                                <apex:outputPanel layout="none" rendered="{!opportunityObj.AccountId != null}">
+                                                                <a href="javascript:void(0);" onclick="AV_app.quick_action('uiDialog',['#dialog-CreateCaseForm', 'Quick Create Contact', 500, 655, '/apex/DWLMS_QuickContactCreate?accid={!opportunityObj.AccountId}&oppid={!opportunityObj.Id}', false, '100%', '100%', true],true)">&nbsp;&nbsp;&nbsp;Quick Create Contact For Account</a>
+                                                                </apex:outputPanel>
+                                                                <apex:outputPanel layout="none" rendered="{!opportunityObj.PrimaryAgency__c != null}">
+                                                                <a href="javascript:void(0);" onclick="AV_app.quick_action('uiDialog',['#dialog-CreateCaseForm', 'Quick Create Contact', 500, 655, '/apex/DWLMS_QuickContactCreate?accid={!opportunityObj.PrimaryAgency__c}&oppid={!opportunityObj.Id}', false, '100%', '100%', true],true)">&nbsp;&nbsp;&nbsp;Quick Create Contact For Agency</a>
+                                                                </apex:outputPanel>
+                                                            </li>
+                                                        </ul>
+                                                    </apex:outputPanel>
+                                                    <apex:relatedList rendered="{!NOT(isEdit)}" list="OpportunityContactRoles" />
+                                                    <apex:relatedList rendered="{!isEdit}" list="OpportunityContactRoles" >
+                                                        <apex:facet name="header" >&nbsp;</apex:facet>
+                                                    </apex:relatedList>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="case">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:relatedList rendered="{!NOT(isEdit)}" list="EinsteinCases__r" />
+                                                    <apex:relatedList rendered="{!isEdit}" list="EinsteinCases__r" >
+                                                        <apex:facet name="header" >&nbsp;</apex:facet>
+                                                    </apex:relatedList>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="opportunity_team">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:relatedList rendered="{!NOT(isEdit)}" list="OpportunityTeamMembers" />
+                                                    <apex:relatedList rendered="{!isEdit}" list="OpportunityTeamMembers" >
+                                                        <apex:facet name="header" >&nbsp;</apex:facet>
+                                                    </apex:relatedList>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="all_products">
+                                                <div class="relatedListSectionHolder">
+                                                    <apex:pageBlock >
+                                                        <apex:pageBlockTable value="{!opportunityObj.OpportunityLineItems}" var="lineItem">
+                                                            <apex:column headervalue="Product Name">
+                                                                <apex:outputLink value="/{!lineItem.id}">{!lineItem.PricebookEntry.Product2.Name}</apex:outputLink>
+                                                            </apex:column>
+                                                            <apex:column headervalue="List Price" value="{!lineItem.List_Price_Formula__c}" />
+                                                            <apex:column headervalue="Sales Price" value="{!lineItem.unitprice}" />
+                                                            <apex:column headervalue="Quantity" value="{!lineItem.Quantity}" />
+                                                            <apex:column headervalue="Total Price" value="{!lineItem.totalprice}" />
+                                                            <apex:column headervalue="Line Description" value="{!lineItem.description}" />
+                                                            <apex:column headervalue="Discount Given" value="{!lineItem.Discount_Given__c}" />
+                                                            <apex:column headervalue="Discounted Price" value="{!lineItem.Discounted_Price__c}" />
+                                                            <apex:column headervalue="CRM Integration" value="{!lineItem.CRM_Integration__c}" rendered="{!businessUnit=='LSS'}" />
+                                                        </apex:pageBlockTable>
+                                                    </apex:pageBlock>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 side-bar">
+                                    
+                                    <div class="panel panel-av" id="related_products">
+                                        <div class="panel-heading" data-target="#pis" data-toggle="collapse">
+                                            <i></i>
+                                            <h3 class="panel-title">
+                                                <apex:outputText value="Products ({!IF(opportunityObj.OpportunityLineItems.size > 3, '3+', opportunityObj.OpportunityLineItems.size)})" />
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body panel-collapse collapse in" id="pis">
+                                            <apex:variable var="index" value="{!0}" />
+                                            <apex:repeat value="{!opportunityObj.OpportunityLineItems}" var="lineItem">
+                                                <apex:outputPanel rendered="{!index == 0 || index == 1 || index == 2}">
+                                                    <div class='panel-sub-section'>
+                                                        <i></i>
+                                                        <apex:outputLink value="/{!lineItem.id}" styleClass="product-name">{!lineItem.PricebookEntry.Product2.Name}</apex:outputLink>
+                                                            <div class='section-details'>
+                                                                <div>
+                                                                    <label class="form-control-label">Quantity:</label>
+                                                                    <apex:outputText value="{!lineItem.Quantity}" />
+                                                                </div>
+                                                                <div>
+                                                                    <label class="form-control-label">Sales Price:</label>
+                                                                    <apex:outputText value="{0, Number, Currency}">
+                                                                        <apex:param value="{!lineItem.totalprice}" />
+                                                                    </apex:outputText>
+                                                                </div>
+                                                            </div>    
+                                                        <apex:variable var="index" value="{!index + 1}" />
+                                                    </div>    
+                                               </apex:outputPanel> 
+                                            </apex:repeat>
+                                            <br/>
+                                            <apex:outputPanel rendered="{!opportunityObj.OpportunityLineItems.size == 0}" layout="block" styleClass="no-product-msg">
+                                                <span >Products are only available in Corporate Account Center until the order is complete.</span>
+                                                <a class="cac-url" href="{!$Label.CAC_Quote_Redirection}{!$CurrentPage.Parameters.id}" target="_blank">Add products in Corporate Account Center</a>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!opportunityObj.OpportunityLineItems.size != 0}">
+                                                <span class="view-all-items" data-target='all_products'> View All </span>
+                                            </apex:outputPanel>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="panel panel-av" id="related_notes">
+                                        <div class="panel-heading" data-target="#nis" data-toggle="collapse">
+                                            <i></i>
+                                            <h3 class="panel-title">
+                                                <apex:outputText value="Notes & Attachments ({!IF((opportunityObj.Notes.size + opportunityObj.Attachments.size) > 3, '3+', opportunityObj.Notes.size + opportunityObj.Attachments.size)})" />
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body panel-collapse collapse in" id="nis">
+                                            <apex:variable var="n_index" value="{!0}" />
+                                            <apex:repeat value="{!opportunityObj.Notes}" var="notesItem">
+                                                <apex:outputPanel rendered="{!n_index == 0 || n_index == 1}">
+                                                    <div class='panel-sub-section'>
+                                                        <i class='note-item'></i>
+                                                        <apex:outputLink value="/{!notesItem.id}" title="{!notesItem.Title}" styleClass="note-title">{!notesItem.Title}</apex:outputLink>
+                                                        <span class="note-details">
+                                                            <apex:outputText value="{0, date, MMMM d','  yyyy}" styleClass="note-date">
+                                                                <apex:param value="{!notesItem.CreatedDate}" /> 
+                                                            </apex:outputText>
+                                                            <apex:outputText value="{!notesItem.Body}" title="{!notesItem.Body}" styleClass="note-body text-ellipsis">
+                                                            </apex:outputText>
+                                                        </span>
+                                                        <apex:variable var="n_index" value="{!n_index + 1}" />
+                                                    </div>    
+                                                </apex:outputPanel>
+                                            </apex:repeat>
+                                            <apex:variable var="a_index" value="{!0}" />
+                                            <apex:repeat value="{!opportunityObj.Attachments}" var="aItem">
+                                                <apex:outputPanel rendered="{!a_index== 0 || a_index== 1}">
+                                                    <div class='panel-sub-section'>
+                                                        <i class='attachment-item'></i>
+                                                        <apex:outputLink value="/{!aItem.id}" title="{!aItem.Name}" styleClass="note-title">{!aItem.Name}</apex:outputLink>
+                                                        <span Class="note-details">
+                                                            <apex:outputText value="{0, date, MMMM d','  yyyy}" styleClass="note-date">
+                                                                <apex:param value="{!aItem.CreatedDate}" /> 
+                                                            </apex:outputText>
+                                                            <apex:outputText value="{!aItem.BodyLength/1000}KB" styleClass="attachment-size">
+                                                            </apex:outputText>
+                                                            
+                                                            <apex:outputText value="{!IF(FIND('.', aItem.Name) > -1, MID(RIGHT(aItem.Name, 5), FIND('.', RIGHT(aItem.Name, 5))+1, 5), '') }" styleClass="attachment-type">
+                                                            </apex:outputText>
+                                                            <!--
+                                                            <apex:outputText value="{!aItem.ContentType}" styleClass="attachment-type">
+                                                            </apex:outputText>
+                                                            -->
+                                                        </span>    
+                                                        <apex:variable var="a_index" value="{!a_index+ 1}" />
+                                                    </div>    
+                                                </apex:outputPanel>
+                                            </apex:repeat>
+                                            <br/>
+                                            <apex:outputPanel rendered="{!(opportunityObj.Notes.size + opportunityObj.Attachments.size) == 0}" layout="block" styleClass="no-product-msg">
+                                                <span >Notes and Attachments are only available in Corporate Account Center until the order is complete.</span>
+                                                <a class="cac-url" href="{!$Label.CAC_Quote_Redirection}{!$CurrentPage.Parameters.id}" target="_blank">Add Notes and Attachments in Corporate Account Center</a>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!(opportunityObj.Notes.size + opportunityObj.Attachments.size) != 0}">
+                                                <span class="view-all-items" data-target='notes_attachments'> View All </span>
+                                            </apex:outputPanel>    
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="panel panel-av" id="related_contacts">
+                                        <div class="panel-heading" data-target="#cis" data-toggle="collapse">
+                                            <i></i>
+                                            <h3 class="panel-title">
+                                                <apex:outputText value="Contact Roles ({!IF(opportunityObj.OpportunityContactRoles.size > 3, '3+', opportunityObj.OpportunityContactRoles.size)})" />
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body panel-collapse collapse in" id="cis">
+                                            <apex:variable var="c_index" value="{!0}" />
+                                            <apex:repeat value="{!opportunityObj.OpportunityContactRoles}" var="contactItem">
+                                                <apex:outputPanel rendered="{!c_index == 0 || c_index == 1 || c_index == 2}">
+                                                    <div class='panel-sub-section'>
+                                                        <i></i>
+                                                        <apex:outputLink value="/{!contactItem.id}" styleClass="contact-name">{!contactItem.contact.Name}</apex:outputLink>
+                                                        <div class='section-details'>                                                                
+                                                            <div>
+                                                                <label class="form-control-label">Role:</label>
+                                                                <apex:outputText value="{!contactItem.Role}" />
+                                                            </div>
+                                                            <div>
+                                                                <label class="form-control-label">Title:</label>
+                                                                <apex:outputText value="{!contactItem.contact.salutation}" />
+                                                            </div>
+                                                        </div>    
+                                                        <apex:variable var="c_index" value="{!c_index + 1}" />
+                                                    </div>    
+                                               </apex:outputPanel> 
+                                            </apex:repeat>
+                                            <br/>
+                                            <apex:outputPanel rendered="{!opportunityObj.OpportunityContactRoles.size == 0}" layout="block" styleClass="no-product-msg">
+                                                <span >Contacts are only available in Corporate Account Center until the order is complete.</span>
+                                                <a class="cac-url" href="{!$Label.CAC_Quote_Redirection}{!$CurrentPage.Parameters.id}" target="_blank">Add contacts in Corporate Account Center</a>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!opportunityObj.OpportunityContactRoles.size != 0}">
+                                                <span class="view-all-items" data-target='contact_roles'> View All </span>
+                                            </apex:outputPanel> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
+            <div id="dialog-CreateCaseForm"></div>
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Leave page?</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>You have unsaved changes.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Stay on this page</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Leave this page</button>
+                    </div>
+                  </div>
+                  
+                </div>
+            </div>
+            <script type="text/javascript">
+            
+            sforce.connection.sessionId = "{!$Api.Session_ID}";
+             var apex_labels = {
+                user_id: "{!$User.Id}",
+                profile_name: "{!$Profile.Name}",
+                profile_id: "{!LEFT($Profile.Id, 15)}",
+                userrole_name: "{!$UserRole.Name}",
+                Organization_Id: "{!$Organization.Id}",
+                user: {!UserRecord },
+                is_edit_mode: {!isEdit},
+                session_id: sforce.connection.sessionId.substring(sforce.connection.sessionId.length-14),
+                oppty_id: "{!opportunityObj.Id}",
+                super_admin_profiles: "{!$Label.Abacus_Super_Admin_Profiles}"
+            };
+            
+            var AV_global = {
+                field_changed: false,
+                save_btn_clicked: false
+            };
+
+            var config = {
+                "global": {
+                    "locale_formats": {
+                        "en_US": "mm/dd/yyyy",
+                        "sv_SE": "yyyy/mm/dd",
+                        "sv": "yyyy/mm/dd",
+                        "ja_JP": "yyyy/mm/dd",
+                        "ga": "yyyy/mm/dd",
+                        "default": "dd/mm/yyyy",
+                        "server_default": "mm/dd/yyyy"
+                    }
+                }
+            };
+            
+        </script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.2/moment-timezone-with-data.js"></script>
+            <apex:includescript value="{!URLFOR($Resource.LMSDealWizard, 'scripts/tour/hopscotch.min.js')}"/>
+            <script src="{!$Resource.AnalyticsUtil}"/>
+            <script src="/apex/AV_tour_js"></script>
+            <script src="/apex/AV_app_js"></script>
+            <style type="text/css">
+                .actionColumn { display: {!IF(isEdit, 'none', 'table-cell')}; }
+            </style>
+        </body>
+    </html>
+</apex:page>
