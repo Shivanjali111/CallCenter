@@ -1,0 +1,131 @@
+<!--
+    Copyright (c)2008, Matthew Friend, Sales Engineering, Salesforce.com Inc.
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+    Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+    Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    Neither the name of the�salesforce.com nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. 
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+    EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<!--
+    Note on Changing: Scroll down or search for "Change"
+    Ignore warnings
+
+    @Bharathi - 21 March 2016 - Case # 04807532 - Enhancing "View Hierarchy":
+        - Component modified to drive columns based on Field Set
+        - Component modified to include Account Team Member Roles when running user business unit is HS or System Admin 
+        - HS_RM_Mapping variable holds the grouping of other roles under HS_RM
+
+ -->
+
+<apex:component controller="AccountStructure">
+<link rel="stylesheet" media="screen" href="{!URLFOR($Resource.StandardLibraries, 'bootstrap/3.0.0/styles/bootstrap.css')}" />
+<apex:attribute name="startingId" description="This is the Account Id for displaying Acccount Hierarchy" type="String" required="true" assignTo="{!currentId}"/>
+
+    <table style="width:100%" class="table table-bordered table-condensed">
+        <tr style="background-color:#F7F7F7;" class="trheader">
+            <apex:repeat value="{!$ObjectType.Account.FieldSets.AccountHierarchy}" var="f">
+            <td>{!f.Label}</td>
+            </apex:repeat>
+            
+            <apex:repeat value="{!accountTeamRolesMap}" var="acctRole">
+            <td>{!acctRole}</td>
+            </apex:repeat>
+        </tr>
+        
+        
+        <apex:repeat value="{!ObjectStructure}" var="pos">
+        <tr style="{!IF(pos.currentNode,'background-color:#D8E9FF','')}">
+        
+        <!-- Account Fields Display -->
+        <apex:repeat value="{!$ObjectType.Account.FieldSets.AccountHierarchy}" var="f">
+            <td>
+                <apex:outputPanel rendered="{!f=='Name'}">
+                    <apex:repeat value="{!pos.levelFlag}" var="flag" first="0">
+                    <apex:image url="/img/tree/empty.gif" height="16" width="20" rendered="{!IF(flag,false,true)}"/>
+                    <apex:image url="/img/tree/chain.gif" height="16" width="20" rendered="{!IF(flag,true,false)}"/>
+                    </apex:repeat>
+                    <apex:outputText rendered="{!IF(pos.nodeType=='start',true,false)}">
+                        <apex:image id="tree_start" url="/img/tree/minusStart.gif" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/>
+                        <apex:image id="Icon_start" url="/img/icon/custom51_100/globe16.png" width="16" height="16" rendered="{!IF(pos.currentNode,false,true)}"/>
+                        <apex:image id="Icon_start_current" url="/img/icon/star16.png" width="16" height="16" rendered="{!IF(pos.currentNode,true,false)}"/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!IF(OR(pos.nodeType=='parent',pos.nodeType=='parent_end'),true,false)}">
+                        <apex:image id="Tree_parent" url="/img/tree/minus.gif" rendered="{!IF(pos.nodeType=='parent',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/>
+                        <apex:image id="Tree_parent_end" url="/img/tree/minusEnd.gif" rendered="{!IF(pos.nodeType=='parent_end',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/>                
+                        <apex:image id="Icon_parent" url="/img/icon/factory16.png" width="16" height="16" rendered="{!IF(pos.currentNode,false,true)}"/>
+                        <apex:image id="Icon_parent_current" url="/img/icon/star16.png" width="16" height="16" rendered="{!IF(pos.currentNode,true,false)}"/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!IF(OR(pos.nodeType=='child',pos.nodeType=='child_end'),true,false)}">
+                        <apex:image id="Tree_child" url="/img/tree/node.gif" rendered="{!IF(pos.nodeType=='child',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/>
+                        <apex:image id="Tree_child_current" url="/img/tree/nodeEnd.gif" rendered="{!IF(pos.nodeType=='child_end',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/>
+                        <apex:image id="Icon_child" url="/img/icon/desk16.png" width="16" height="16" rendered="{!IF(pos.currentNode,false,true)}"/>    
+                        <apex:image id="Icon_child_current" url="/img/icon/star16.png" width="16" height="16" rendered="{!IF(pos.currentNode,true,false)}"/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!IF(pos.nodeType=='end',true,false)}">
+                        <apex:image id="Tree_end" url="/img/tree/nodeEnd.gif" height="16" width="20"/>&nbsp;
+                        <apex:image id="Icon_end" url="/img/icon/desk16.png" width="16" height="16" rendered="{!IF(pos.currentNode,false,true)}"/>
+                        <apex:image id="Icon_end_current" url="/img/icon/star16.png" width="16" height="16" rendered="{!IF(pos.currentNode,true,false)}"/>
+                    </apex:outputText>
+                    <apex:outputLink value="/{!pos.account.Id}" styleClass="columnHeadActiveBlack" target="_top">{!pos.account[f]}</apex:outputLink>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!f!='Name'}">
+                     {!pos.account[f]}
+                </apex:outputPanel>
+            </td>
+        </apex:repeat>
+        
+        <!-- Account Team Members Display -->
+        <apex:repeat value="{!accountTeamRolesMap}" var="acctRole">
+            <td>
+                <apex:repeat value="{!accountTeamRolesMap[acctRole]}" var="act">
+                    <apex:repeat value="{!pos.account.AccountTeamMembers}" var="actMem">
+                        <apex:outputPanel rendered="{!actMem.TeamMemberRole==act}">
+                            <apex:outputLink value="/{!actMem.UserId}" target="_top">{!actMem.User.Name}</apex:outputLink>
+                            <br/>
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </apex:repeat>
+            </td>
+        </apex:repeat>
+    </tr>
+    </apex:repeat>
+    </table>
+
+<style>
+body, table 
+{
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    border-collapse:inherit;
+}
+
+.trheader
+{
+    font-weight:bold;
+}
+
+.table th, .table td 
+{
+    border: 0px !important;
+}
+
+a 
+{
+    color: black;
+    text-decoration: underline;
+}
+</style>
+<script>
+</script>     
+</apex:component>

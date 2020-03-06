@@ -1,0 +1,247 @@
+<apex:component id="attachmentComponent" controller="AttachmentComponentController" allowDML="true" >
+<style type="text/css">
+    *{
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .attachment-table th{
+        width:15%;
+        background-color: #DBE4E9;
+        border-right: 1px solid #C7D0D5;
+        padding: 9px 10px;
+        text-align: left;
+    }
+
+    .attachment-table th:nth-child(6) {
+       border-right: none;
+    }
+    .attachment-table th div{
+        color: #333;
+    }
+
+    .attachment-table tr{
+      border-top: 1px solid #c6d7d6;
+    }
+
+    .attachment-table tr:hover{
+        background: #c8e6f7;
+    }
+
+    .attachment-table td{
+        text-align: left;
+        padding-left: 10px;
+        height: 30px;
+    }
+
+    .pbHeader{
+        padding-top: 10px;
+    }
+
+    .pbSubsection{
+        padding-top: 26px;
+    }
+
+    .bPageBlock h2{
+        padding-right: 10px;
+        padding-left: 20px;
+        font-size: 15px;
+        color: #333;
+    }
+
+    .pbButtonb input{
+        background: #444;
+        padding: 5px 18px;
+        border: none;
+        border-radius: 15px;
+        outline: none;
+        color: #fff;
+        cursor: pointer;
+        margin: 22px 12px 12px 0;
+    }
+
+    .detailList tr{
+        height: 50px;
+    }
+
+    .labelCol{
+        padding-right: 11px;
+        text-align: right;
+        vertical-align: top;
+    }
+
+    .download-image{
+        background: url('/resource/1433244386000/CB_assets/img/CB_sprite.png') no-repeat -8px -1394px;
+        width: 18px;
+        height: 16px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .download-image:hover{
+        background-position: -40px -1394px;
+    }
+
+
+    .delete-image{
+        background: url('/resource/1433244386000/CB_assets/img/CB_sprite.png') no-repeat -77px -435px;
+        width: 12px;
+        height: 12px;
+        display: block;
+        margin:0 auto;
+    }
+
+    .delete-image:hover{
+        background-position: -100px -435px;
+    }
+
+    .last label, .first label{
+        color: #222;
+        font-size: 12px;
+        padding-left: 20px;
+    }
+
+    .detailList th.first{
+        padding-top: 18px;
+    }
+
+    textarea{
+        width: 213%;
+        height: 100%;
+        outline: none;
+    }
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.custom-file-input::before {
+  content: 'Choose file';
+  display: inline-block;
+  background: #444;
+  border: none;
+  border-radius: 15px;
+  padding: 3px 8px;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.description-label{
+    padding-left: 70px !important;
+}
+
+.pbBottomButtons{
+    text-align: right;
+}
+
+.pbBottomButtons > table{
+    width: 100%;
+}
+
+.message.infoM3{
+    position: relative;
+}
+
+.messageTable{
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 0;
+}
+
+.messageCell .messageText{
+    font-size: 12px;
+    padding: 4px 0;
+    background-color: #95c753;
+}
+.messageTable tr:first-child>td:first-child{
+    display: none;
+} 
+
+.progress-bar{
+  padding: 5px 18px;
+  margin: 20px 12px 10px 0;
+  display: none;
+}
+
+
+
+</style>
+<script type="text/javascript">
+    function showProgressBar(){
+        document.getElementsByClassName("progress")[0].style.display = 'none';
+        document.getElementsByClassName("progress-bar")[0].style.display = 'block';
+        document.getElementsByClassName("progress-bar")[0].innerHTML = "<img src='/img/loading.gif' />";
+    }
+
+    setTimeout(function(){
+        if(document.getElementsByClassName("messageTable")[0] != undefined)
+        document.getElementsByClassName("messageTable")[0].style.display = "none";
+    }, 3000);
+
+</script>
+    <apex:attribute name="varParentId" assignTo="{!parentId}" description="SFDC ID of the record for which we need to fetch attachments." type="String" required="true" />
+
+    <apex:pageBlock id="uploadBlock">
+        
+        <apex:pageBlockButtons styleClass="uploadBlock" location="bottom">
+            <apex:commandButton styleClass="progress" onclick="showProgressBar();" id="btnUpload" action="{!uploadAttachment}" value="Upload" />
+            <div class="progress-bar"></div>
+        </apex:pageBlockButtons>
+
+        <apex:pageBlockSection id="uploadSection" columns="2">
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Upload File : " />
+                <apex:inputFile id="file" styleclass="custom-file-input" value="{!attachmentUpload.Body}" filename="{!attachmentUpload.Name}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel styleClass="description-label" value="Description : " />
+                <apex:inputTextarea id="description" value="{!attachmentUpload.Description}" />
+            </apex:pageBlockSectionItem>
+
+        </apex:pageBlockSection>
+        
+    </apex:pageBlock>
+
+    <apex:pageBlock id="viewBlock">
+
+        <apex:dataTable id="attachmentTable" styleClass="attachment-table" var="attachment" value="{!attachments}" style="width: 100%;">
+
+            <apex:column id="col1">
+                <apex:facet name="header">File Name</apex:facet>
+                <apex:outputText id="attName" value="{!attachment.Name}" />
+            </apex:column>
+            <apex:column id="col2">
+                <apex:facet name="header">Size (KB)</apex:facet>
+                <apex:outputText id="attSize" value="{0, number, ###,##0.00} KB" >
+                    <apex:param value="{!attachment.BodyLength / 1024.0}"/>
+                </apex:outputText>
+            </apex:column>
+            <apex:column id="col3">
+                <apex:facet name="header">Description</apex:facet>
+                <apex:outputText id="attDescription" value="{!attachment.Description}" />
+            </apex:column>
+            <apex:column id="col4">
+                <apex:facet name="header">Owner</apex:facet>
+                <apex:outputText id="attOwner" value="{!attachment.Owner.Name}" />
+            </apex:column>
+            <apex:column id="col5">
+                <apex:facet name="header">Download</apex:facet>
+                <apex:outputLink id="attDownload" onclick="window.open('/servlet/servlet.FileDownload?file={!attachment.Id}','Download Attachment','width=100,height=100'); return false;" ><span class="download-image"></span></apex:outputLink>
+            </apex:column>
+            <apex:column id="col6">
+                <apex:facet name="header">Delete</apex:facet>
+                <apex:commandLink id="attDelete" action="{!deleteAttachment}" styleClass="delete-image" value="" >
+                    <apex:param name="attId" value="{!attachment.Id}" assignTo="{!attachmentId}" />
+                </apex:commandLink>
+            </apex:column>
+
+        </apex:dataTable>
+
+    </apex:pageBlock>
+
+</apex:component>

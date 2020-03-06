@@ -1,0 +1,20 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId" access="global">
+	<aura:attribute name="caseObj" type="Object"/>
+	<aura:attribute name="simpleCaseRecord" type="Object"/>
+
+    <!-- Retrieve case record -->
+	<force:recordData aura:id="caseRecordLoader"
+                    recordId="{!v.recordId}"
+                    fields="Id,AccountId,ContactId,Account.Account__c,Contact.Email,Contact.Member_Id__c"
+                    targetRecord="{!v.caseObj}"
+                    targetFields="{!v.simpleCaseRecord}"
+                    recordUpdated="{!c.doInit}"
+	/>
+
+  <!-- Event handler to initialize the component -->
+
+  <!-- Utility or Service components -->
+  <c:GenericUtility aura:id="genericUtility" />
+  <!-- Utility or Service components -->
+
+</aura:component>

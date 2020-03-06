@@ -1,0 +1,9 @@
+<apex:page standardController="Account">   
+<apex:repeat value="{!Account.Account_Insights__r}" var="Insights" id="theRepeat" rows="1">
+<apex:outputPanel rendered="{!Insights.RecordType.DeveloperName == 'Account'}">
+    <apex:form >
+        <c:RelatedFieldsLayout fieldSets="CreditFieldsOnAccount" id="custmCompAcct" SobjectId="{!Insights.Id}" SobjectType="Insights__c" />
+    </apex:form>
+</apex:outputPanel>
+</apex:repeat> 
+</apex:page>

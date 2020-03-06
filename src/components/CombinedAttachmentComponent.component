@@ -1,0 +1,95 @@
+<!-- Component to display all Notes & Attachments  for an object -->
+
+<apex:component controller="CombinedAttachmentController" allowDML="true">
+
+	<apex:attribute name="varParentId" assignTo="{!parentId}" description="Parent Record ID" type="String" required="true"/>
+	<apex:attribute name="varObjName" assignTo="{!objAPIName}" description="Object API Name" type="String" required="true"/>
+	
+	<apex:pageBlock id="attBlock">
+		<apex:actionFunction name="editRecord" action="{!editRecord}" reRender="attBlock">
+			<apex:param name="recId" value="" />
+		</apex:actionFunction>	
+		
+		<apex:actionFunction name="downloadFile" action="{!downloadFile}" reRender="attBlock">
+			<apex:param name="recId" value="" />
+		</apex:actionFunction>	
+			
+		<apex:actionFunction name="previewFile" action="{!getLatestVersionId}" reRender="attBlock"
+			oncomplete="javascript:OverlayDialogElement.showFilePreview('docViewerOverlay','title_for_{!fileLatestVersionId}','/_swf/196006/sfc','{!fileLatestVersionId}','chatter_bubble','false','docViewerContainer',false,'pdf',false,'');">
+			<apex:param name="recId" value="" />
+		</apex:actionFunction>					
+			
+		<!-- Button section to add notes & Attachments -->
+		<apex:pageBlockButtons location="top">
+			<apex:commandButton value="New Note" action="{!newNote}"/>
+			<apex:commandButton value="Attach File" action="{!attachFile}"/>
+			<apex:commandButton value="View All" rendered="{!CombinedAttachments.size>0}" action="{!viewAll}"/>
+			<apex:outputText rendered="{!isRedirect}">
+				<script type="text/javascript">
+					window.top.location.href = '{!redirectUrl}';
+				</script>
+			</apex:outputText>			
+		</apex:pageBlockButtons>
+		
+		<!-- Section to display all notes & Attachments -->
+		<apex:outputLabel value="No records to display" rendered="{!CombinedAttachments.size=0}"/>
+        <apex:pageBlockTable value="{!CombinedAttachments}" var="ca" rendered="{!CombinedAttachments.size>0}" id="attTable">
+       		<apex:column styleclass="actionColumn"> 
+       			<apex:facet name="header">Action</apex:facet>
+       			<apex:outputPanel rendered="{!ca.RecordType='File'}">
+       				<apex:CommandLink value="Preview" styleclass="actionLink" onClick="previewFile('{!ca.Id}');return false;"/>&nbsp;|&nbsp;
+       			</apex:outputPanel>
+       			
+       			<apex:outputPanel rendered="{!ca.RecordType='File'}"> 
+       				<apex:CommandLink value="Download" styleclass="actionLink" onClick="downloadFile('{!ca.Id}');return false;"/>&nbsp;|&nbsp;     				  
+				</apex:outputPanel>
+       			
+       			<apex:outputPanel rendered="{!ca.RecordType='Attachment' || ca.RecordType='Note'}">  
+       				<apex:CommandLink value="Edit" styleclass="actionLink" onClick="editRecord('{!ca.Id}'); return false;"/>&nbsp;|&nbsp;
+       			</apex:outputPanel>
+       			
+       			<apex:outputPanel rendered="{!ca.RecordType='Attachment'}"> 
+       				<apex:OutputLink styleclass="actionLink" value="{!URLFOR($Action.Attachment.Download, ca.Id)}" target="_blank">View</apex:OutputLink>&nbsp;|&nbsp;
+       			</apex:outputPanel>
+				
+				<apex:outputPanel rendered="{!ca.RecordType='File'}"> 
+					<apex:OutputLink styleclass="actionLink" value="/setup/own/deleteredirect.jsp?id={!parentId}&delID={!ca.Id}&retURL={!parentId}" onclick="return confirm('{!$Label.DeleteFileAlert}');" target="_top">Del</apex:OutputLink>       				
+       			</apex:outputPanel>
+				
+				<apex:outputPanel rendered="{!ca.RecordType!='File'}"> 
+       				<apex:OutputLink styleclass="actionLink" value="/setup/own/deleteredirect.jsp?id={!parentId}&delID={!ca.Id}&retURL={!parentId}" onclick="return confirm('Are you Sure?');" target="_top">Del</apex:OutputLink>
+       			</apex:outputPanel>       			
+       		</apex:column>
+       		
+        	
+        	<apex:Repeat value="{!lstColumnToDisplay}" var="col">
+        		<apex:column >
+        			<apex:facet name="header">
+						<apex:commandLink action="{!ViewSortedData}" rerender="attBlock" 
+							value="{!col.Field_Label__c} {!IF(sortField==col.FieldAPIName__c,IF(sortDirection =='ASC','↑','↓'),'')}">
+							<apex:param value="{!col.FieldAPIName__c}" name="column" assignTo="{!sortField}" />
+						</apex:commandLink>  
+						</apex:facet>      			
+        			<apex:outputField value="{!ca[col.FieldAPIName__c]}" rendered="{!col.FieldAPIName__c != $Label.NotesAttachmentTitleFieldAPI}"/>
+        			<apex:outputLink value="/{!ca.Id}" target="_top" rendered="{!col.FieldAPIName__c = $Label.NotesAttachmentTitleFieldAPI}">{!ca[col.FieldAPIName__c]}</apex:outputLink>
+        		</apex:column>
+        	</apex:Repeat>
+        </apex:pageBlockTable>
+        
+        <!-- Section to navigate through Notes & Attachments -->
+        <apex:outputPanel rendered="{!totalRecords>rowCount}">
+        	<br/> 
+        	<apex:outputPanel rendered="{!NOT(previous)}" >
+				<apex:CommandLink value="First" rerender="attBlock" action="{!first}" styleclass="actionLink"/>&nbsp;|&nbsp;
+				<apex:CommandLink value="Previous" rerender="attBlock" action="{!previous}" styleclass="actionLink"/>&nbsp;|&nbsp;
+			</apex:outputPanel>
+			
+			<apex:outputPanel rendered="{!NOT(next)}">
+				<apex:CommandLink value="Next" rerender="attBlock" action="{!next}"  styleclass="actionLink"/>&nbsp;|&nbsp;
+				<apex:CommandLink value="Last" rerender="attBlock" action="{!last}" styleclass="actionLink"/>&nbsp;|&nbsp;
+			</apex:outputPanel>      
+			
+			<apex:CommandLink value="Go to List >>" styleclass="actionLink" action="{!goToList}"/> 	
+        </apex:outputPanel> 
+	</apex:pageBlock>
+</apex:component>

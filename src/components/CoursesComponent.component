@@ -1,0 +1,60 @@
+<apex:component controller="CourseTemplateController" access="global">
+    <apex:attribute name="agmtId" type="Id" access="global" description="Id of the Agreement" assignTo="{!agreementId}"/>
+    <table cellpadding="2" cellspacing="0" width="100%">
+        <tr>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">OTL Admin Id</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Course Title</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Content Library</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Language</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Currency</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Royalty Rate</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Royalty Advance</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">1st Payment(%)</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">2nd Payment(%)</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Flat Rate</th>
+            <th align="left" bgcolor="#0077b5" style="color:#ffffff; border-left:1px solid #000; border-top:1px solid #000; border-bottom:1px solid #000;">Flat Rate Due Date</th>
+
+        </tr>
+        <apex:repeat value="{!AgreementCourses}" var="coursesObj">
+            <tr>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.OTL_Admin_ID__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Course_Title__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Course_Type__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Language_2__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Currency_2__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Royalty_Rate__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Royalty_Advance__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.X1st_Payment__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.X2nd_Payment__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    {!coursesObj.Flat_Rate__c}
+                </td>
+                <td style="border-left: 1px solid #000; border-bottom: 1px solid #000;">
+                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                        <apex:param value="{!coursesObj.Due_Date__c}" /> 
+                    </apex:outputText>
+                </td>
+                
+            </tr>
+        </apex:repeat>
+        
+    </table>
+</apex:component>

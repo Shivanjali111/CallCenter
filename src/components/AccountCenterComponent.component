@@ -1,0 +1,28 @@
+<apex:component >
+    <style>
+     #btn-acc-center{
+        float: right; 
+        border-radius: 3px;
+        padding: 0px 13px 0px 40px;
+        background: #004471;
+        color: #FFF !important;
+        font-weight: bold;
+        background-image: url('/resource/1468841849000/AV_assets/img/lin-icon.png');
+        background-repeat: no-repeat;
+        background-position: 15px;
+        background-size: 6%;
+    }
+    
+    #btn-acc-center .lbl-acc-center {
+        padding: 6px 15px 4px 0px;
+        float: left;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    </style>
+    <a href="{!$Label.CAC_Quote_Redirection}{!$CurrentPage.Parameters.id}" target="_blank" id="btn-acc-center" role="button"  data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Calculate product pricing, create quotes, send orders to customer and track order status">
+        <span class="lbl-acc-center">Go to Account Center</span>
+    </a>
+    
+</apex:component>

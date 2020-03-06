@@ -1,0 +1,5 @@
+<apex:component id="CurrencyConversion" controller="SOPPenetrationController" access="global">
+     <apex:attribute name="Product_Amount" description="Amount Field Value" type="Decimal" required="required" assignTo="{!productAmtVal}"/>
+     <apex:attribute name="oppty_currency" description="Opportunity Currency" type="string" required="required" assignTo="{!opptycurrency}"/>
+     <apex:outputText value="( USD {!conversionVal} )" rendered="{!conversionVal != null}"/> 
+</apex:component>
