@@ -1720,7 +1720,7 @@ $User.OverrideWorkflow__c = &quot;False&quot;
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
-        <description>If an account is flagged as an agency and has payment terms less than Net 60, update payment terms to Net 60. #anchorage</description>
+        <description>If an account is flagged as an agency and has payment terms less than Net 60, test update payment terms to Net 60. #anchorage</description>
         <formula>AND( 	$User.OverrideWorkflow__c = &quot;False&quot;, 	CONTAINS($Label.PreapprovedPaymentTerms, TEXT(Payment_Terms__c)), 	OR( 		INCLUDES(Relationship_Type__c, &quot;Agency - MS&quot;), 		INCLUDES(Relationship_Type__c, &quot;Agency - TS&quot;) 	), 	ISCHANGED(Relationship_Type__c) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>

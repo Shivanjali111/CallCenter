@@ -1,7 +1,7 @@
 /**
 * @author       Eric Luu
 * @date         12/15/2014
-* @description  Purpose: allow users without an Apttus license to continue generating a DDP contract as usual without running into an error. 
+* @description  Purpose: allow users without an Apttus license to continue generating a DDP contract as usual without running into an error. ==
 */ 
 global class AccessibleAgreements implements Loop.IApexDataSource {
 

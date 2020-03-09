@@ -3,11 +3,11 @@
 *   @Contains all triggering events pertaining to the Account Object
 *   @NKamadolli - 13 September 2013 - Territory Planning 2014
 *   @Saakshi - 6 April 2016 - SRD7: GSA/SEWP Pricing - Added updateGSASEWPQuotes method in after update call
-*   @Weronika -  22 June 2016 - Added method updateLoosingInsights as per 05564346.===
+*   @Weronika -  22 June 2016 - Added method updateLoosingInsights as per 05564346.=======
 *   @Aieleeta - 22 June 2016 -  Added 'after delete' in the list of trigger events. Also added  !Trigger.isDelete to the method createAccountTeam
 *   @Hkwan - Added new Anchorage triggers, submitForPaymentTermsApproval and updateCreditFields
 *   @Sid - 10/18/2017- Added New trigger for createHistory method
-*   @Neel - 22 Mar 2018 - Orbit: Create integration log for account create/update/delete
+*   @Neel - 22 Mar 2018 - Orbit: Create integration log for account create/update/delete====
 *   @Tracy - 7 June 2018 - Only certain profiles will be allowed to delete/merge account #Monarch
 *   @Paresh - 22 August 2018 - Added method 'billingShippingCountryMismatch' to check if Billing Country/ShippingCountry entered are correct as per project 'Minecraft - QuickSilver Billing Data - Typeahead Simplification' Requirement3
 *   @Anurag - 17 Oct 2018 - Added Method 'createRSCActivationOutreachTask' to create new task when ATS field on Account is updated to a certain specified values.The Changes are for case #10955614

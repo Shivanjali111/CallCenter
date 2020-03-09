@@ -30,7 +30,7 @@
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Populate_Unique_ID</fullName>
-        <description>Populate Unique Account Plan field on Account Plann object with account ID + &quot;-&quot; + plan year for any record type except for CSO Success Plans. CSO Success Plans are updated with plan number + &quot;-&quot; plan name.</description>
+        <description>Populate Unique Account Plan field on Account Plann object with account ID + &quot;-&quot; + plan year for any record test type except for CSO Success Plans. CSO Success Plans are updated with plan number + &quot;-&quot; plan name.</description>
         <field>Unique_Account_Plan_Name__c</field>
         <formula>IF( 
 RecordType.Id = $Label.RT_CSO_Success_Plans, 
