@@ -3,6 +3,7 @@
 * @date         12/15/2014
 * @description  Positive testing to check if a user can query the Agreements ID when user has the Apttus license. 
 *               Negative testing is currently not possible due to Drawloop limitations on retrieving rows for QueryResult.
+* Test commit
 */ 
 @isTest
 private class AccessibleAgreementsTest {
